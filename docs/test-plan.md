@@ -95,10 +95,10 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | Planlandı |
 | REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | Planlandı |
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
-| REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | Planlandı |
-| REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | Planlandı |
-| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | Planlandı |
-| REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | Planlandı |
+| REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | [x] |
+| REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | [x] |
+| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | [x] |
+| REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | [x] |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
 | REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | Planlandı |
 | REQ-3.3 | Sınır değer | `tests/test_scoring.py` | Planlandı |
@@ -115,4 +115,4 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` | Planlandı |
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` | Planlandı |
 
-Test yazıldıkça "Durum" sütunu "Geçiyor" olarak güncellenir.
+Test yazıldıkça "Durum" sütunu [x] olarak güncellenir.
