@@ -109,4 +109,3 @@ def test_unknown_role_column_stops_with_error(tmp_path):
 def test_role_is_empty_without_role_column(tmp_path):
     path = write_csv(tmp_path, "ad_soyad,eposta\nTest Öğrenci Bir,bir@example.org\n")
     assert load_students(path)[0].role == ""
-
