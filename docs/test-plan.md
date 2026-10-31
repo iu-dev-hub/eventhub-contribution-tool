@@ -94,7 +94,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | Planlandı |
 | REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | Planlandı |
 | REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | Planlandı |
-| REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | Planlandı |
+| REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
 | REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | Planlandı |
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | Planlandı |
 | REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | Planlandı |
