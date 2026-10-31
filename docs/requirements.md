@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.1 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -57,7 +57,9 @@ dosyasında değiştirilebilir ve puanlar yeniden hesaplanır.
 **REQ-3.2** Bir öğrencinin puanı, ölçüt sayılarının kendi rolünün ağırlıklarıyla
 çarpılıp toplanmasıdır.
 
-**REQ-3.3** Bir rolün hedef puanı, o roldeki öğrencilerin puan medyanının 1,2 katıdır.
+**REQ-3.3** Bir rolün hedef puanı, o roldeki öğrencilerin puan medyanının hedef
+katsayısıyla çarpımıdır. Varsayılan katsayı 1,0'dır; yani medyandaki öğrenci 100 alır.
+Katsayı değiştirilebilir ve sıfırdan büyük olmalıdır.
 
 **REQ-3.4** Not, puanın hedef puana oranının 100 ile çarpımıdır, en yakın tam sayıya
 yuvarlanır ve 100'ü geçmez.
@@ -102,3 +104,10 @@ e-postası içermez.
 - Yerel dil modeliyle nitel değerlendirme (v2'de ele alınacak)
 - Web arayüzü
 - Taiga API'sine doğrudan bağlanma (CSV dışa aktarımı kullanılır)
+
+## Değişiklik geçmişi
+
+| Sürüm | Değişiklik | Neden |
+|---|---|---|
+| 1.0 | İlk sürüm | — |
+| 1.1 | REQ-3.3: hedef katsayısı 1,2'den 1,0'a indirildi ve ayarlanabilir yapıldı | Öğretim üyesi kararı: daha cömert puanlama |
