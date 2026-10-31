@@ -100,12 +100,12 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | [x] |
 | REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | [x] |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
-| REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | Planlandı |
-| REQ-3.3 | Sınır değer | `tests/test_scoring.py` | Planlandı |
-| REQ-3.4 | Sınır değer | `tests/test_scoring.py` | Planlandı |
-| REQ-3.5 | Karar tablosu | `tests/test_scoring.py` | Planlandı |
-| REQ-3.6 | Denklik sınıfı | `tests/test_scoring.py` | Planlandı |
-| REQ-3.7 | Sınır değer | `tests/test_scoring.py` | Planlandı |
+| REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
+| REQ-3.3 | Sınır değer | `tests/test_scoring.py` | [x] |
+| REQ-3.4 | Sınır değer | `tests/test_scoring.py` | [x] |
+| REQ-3.5 | Karar tablosu | `tests/test_scoring.py` | [x] |
+| REQ-3.6 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
+| REQ-3.7 | Sınır değer | `tests/test_scoring.py` | [x] |
 | REQ-4.1 | Denklik sınıfı | `tests/test_guidance.py` | Planlandı |
 | REQ-4.2 | Sınır değer | `tests/test_guidance.py` | Planlandı |
 | REQ-4.3 | Hata tahmini | `tests/test_guidance.py` | Planlandı |
