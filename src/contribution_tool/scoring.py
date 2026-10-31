@@ -105,4 +105,3 @@ def scoring_warnings(students: Iterable[tuple[str, str]]) -> list[str]:
                 f"Role '{role}' has only one student; the grade compares them only with themselves"
             )
     return warnings
-
