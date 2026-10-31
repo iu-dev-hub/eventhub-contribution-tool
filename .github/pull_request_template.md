@@ -1,7 +1,8 @@
 ## Related issue
 
-<!-- Bu PR'ın kapattığı issue. Örnek: Closes #12 -->
-Closes #
+<!-- Doğrulama gerekmiyorsa (chore, docs): Closes #12  -->
+<!-- Gerçek veriyle doğrulanacaksa (feat, fix): Refs #12 -->
+<!--   Birleşince kartı Ready for test'e taşıyın; doğruladıktan sonra issue'yu kapatın. -->
 
 ## What changed?
 
