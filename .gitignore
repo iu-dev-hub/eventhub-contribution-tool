@@ -1,0 +1,8 @@
+# --- Student data and secrets: must never be committed ---
+ogrenciler*.csv
+students*.csv
+*.xlsx
+*.xls
+output/
+.env
+*.token
