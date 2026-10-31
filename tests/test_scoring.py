@@ -31,24 +31,39 @@ def test_missing_metrics_count_as_zero():
     assert score({}, "Back") == 0
 
 
-# REQ-3.3 — Target is the median of the role times 1.2 (boundary values: 1, odd, even)
+# REQ-3.3 — Target is the median of the role times the target factor (default 1.0)
 
 
 def test_target_with_one_score():
-    assert role_target([10]) == 12
+    assert role_target([10]) == 10
 
 
 def test_target_with_odd_number_of_scores():
-    assert role_target([2, 10, 30]) == 12
+    assert role_target([2, 10, 30]) == 10
 
 
 def test_target_with_even_number_of_scores():
-    assert role_target([2, 8, 12, 30]) == 12
+    assert role_target([2, 8, 12, 30]) == 10
 
 
 def test_target_without_scores_stops_with_error():
     with pytest.raises(ValueError):
         role_target([])
+
+
+def test_median_student_gets_100_with_default_factor():
+    scores = [2, 10, 30]
+    assert grade(10, role_target(scores)) == 100
+
+
+def test_target_factor_can_be_changed():
+    assert role_target([10], factor=1.2) == 12
+
+
+@pytest.mark.parametrize("factor", [0, -1])
+def test_target_factor_must_be_positive(factor):
+    with pytest.raises(ValueError):
+        role_target([10], factor=factor)
 
 
 # REQ-3.4 — Boundary values from the test plan (target = 10)
