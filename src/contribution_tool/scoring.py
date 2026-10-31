@@ -53,7 +53,7 @@ DEFAULT_WEIGHTS = {
     role: {metric: _WEIGHT_TABLE[metric][i] for metric in METRICS} for i, role in enumerate(ROLES)
 }
 
-TARGET_FACTOR = Decimal("1.2")
+DEFAULT_TARGET_FACTOR = 1.0
 
 
 def canonical_role(value: str) -> str:
@@ -71,12 +71,14 @@ def score(counts: Mapping[str, int], role: str, weights=DEFAULT_WEIGHTS) -> floa
     return sum(counts.get(metric, 0) * role_weights[metric] for metric in METRICS)
 
 
-def role_target(scores: Iterable[float]) -> float:
-    """Median of the scores in one role multiplied by 1.2 (REQ-3.3)."""
+def role_target(scores: Iterable[float], factor: float = DEFAULT_TARGET_FACTOR) -> float:
+    """Median of the scores in one role multiplied by the target factor (REQ-3.3)."""
     values = list(scores)
     if not values:
         raise ValueError("A role target needs at least one score")
-    return float(Decimal(str(median(values))) * TARGET_FACTOR)
+    if factor <= 0:
+        raise ValueError("The target factor must be greater than zero")
+    return float(Decimal(str(median(values))) * Decimal(str(factor)))
 
 
 def grade(student_score: float, target: float) -> int:
