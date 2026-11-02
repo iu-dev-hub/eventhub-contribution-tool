@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.6 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.7 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -31,6 +31,16 @@ değerlendirilir.
 **REQ-1.5** Durumu "Reddedildi" olan hata kayıtları sayılmaz.
 
 **REQ-1.6** Bir öğrencinin kendi PR'ına yaptığı inceleme, kod incelemesi olarak sayılmaz.
+
+**REQ-1.8** Bir kullanıcı hikâyesinin durumunu "bitti" grubundaki bir duruma (Bitti,
+Done, Kapandı, Closed) geçiren kullanıcı için bir hikâye kabulü sayılır. Bitti
+grubundaki bir durumdan bu gruptaki başka bir duruma geçiş sayılmaz. Görev ve hata
+kayıtlarının durum değişiklikleri bu ölçüte girmez.
+*Kaynak: kabul testinde, hikâyeleri test edip "Done" durumuna alan bir testçinin Taiga
+CSV'sinde hiç görünmediği bulundu.*
+
+**REQ-1.9** Kullanıcı hikâyesi, görev ve hata kayıtlarına yazılan yorumlar, yorumu
+yazan kullanıcı için sayılır. Boş ve silinmiş yorumlar sayılmaz.
 
 ## 2. Öğrenci eşleme
 
