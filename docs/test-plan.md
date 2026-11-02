@@ -111,7 +111,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-4.3 | Hata tahmini | `tests/test_guidance.py` | Planlandı |
 | REQ-5.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
 | REQ-5.2 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
-| REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` | Planlandı |
+| REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` | [x] |
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` | Planlandı |
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` | Planlandı |
 
