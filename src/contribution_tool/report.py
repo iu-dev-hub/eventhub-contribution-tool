@@ -6,8 +6,9 @@ from collections import Counter, defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+from contribution_tool.adjustments import Adjustment
 from contribution_tool.github import GitHubData
-from contribution_tool.matching import match_students, unlinked_accounts
+from contribution_tool.matching import match_students, normalize_name, unlinked_accounts
 from contribution_tool.scoring import (
     DEFAULT_TARGET_FACTOR,
     canonical_role,
@@ -29,10 +30,19 @@ class StudentResult:
     counts: dict[str, int]
     score: float
     grade: int | None  # None when the student is not matched to any account (REQ-2.4)
+    adjustment: int = 0
+    reasons: tuple[str, ...] = ()
 
     @property
     def unmatched(self) -> bool:
         return self.grade is None
+
+    @property
+    def final(self) -> int | None:
+        """Grade after the instructor's adjustment, kept between 0 and 100 (REQ-3.11)."""
+        if self.grade is None:
+            return None
+        return max(0, min(100, self.grade + self.adjustment))
 
 
 @dataclass(frozen=True)
@@ -48,6 +58,7 @@ def build_report(
     github: GitHubData,
     taiga: TaigaData,
     factor: float = DEFAULT_TARGET_FACTOR,
+    adjustments: Iterable[Adjustment] = (),
 ) -> Report:
     """Match students, add up their counts, and grade them within their role."""
     matches = match_students(students, github.users, github.emails, taiga.users)
@@ -69,6 +80,8 @@ def build_report(
             scores_by_role[role].append(student_score)
     targets = {role: role_target(scores, factor) for role, scores in scores_by_role.items()}
 
+    points, reasons = _collect_adjustments(adjustments, [m.student.name for m in matches])
+
     results = [
         StudentResult(
             name=match.student.name,
@@ -78,6 +91,8 @@ def build_report(
             counts=counts,
             score=student_score,
             grade=None if match.unmatched else grade(student_score, targets[role]),
+            adjustment=points.get(normalize_name(match.student.name), 0),
+            reasons=tuple(reasons.get(normalize_name(match.student.name), [])),
         )
         for match, role, counts, student_score in rows
     ]
@@ -87,6 +102,11 @@ def build_report(
     warnings += [
         f"{r.name}: not matched to any GitHub or Taiga account" for r in results if r.unmatched
     ]
+    warnings += [
+        f"{r.name}: adjustment not applied because the student is not matched"
+        for r in results
+        if r.unmatched and r.reasons
+    ]
 
     return Report(
         students=results,
@@ -94,3 +114,19 @@ def build_report(
         unlinked=unlinked_accounts(matches, github.users | active_taiga),
         warnings=warnings,
     )
+
+
+def _collect_adjustments(
+    adjustments: Iterable[Adjustment], names: list[str]
+) -> tuple[dict[str, int], dict[str, list[str]]]:
+    """Add up adjustments per student; an unknown name stops the tool (REQ-3.11)."""
+    known = {normalize_name(name) for name in names}
+    points: dict[str, int] = defaultdict(int)
+    reasons: dict[str, list[str]] = defaultdict(list)
+    for adjustment in adjustments:
+        key = normalize_name(adjustment.name)
+        if key not in known:
+            raise ValueError(f"Adjustment for a student not in the list: {adjustment.name}")
+        points[key] += adjustment.points
+        reasons[key].append(f"{adjustment.points:+d}: {adjustment.reason}")
+    return points, reasons
