@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.1 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.2 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -23,7 +23,8 @@ incelemeleri, inceleme yorumları, Discussions konu, yorum ve yanıtları.
 hata kayıtlarını okur. CSV bir dosya yolu veya bağlantı olarak verilebilir.
 
 **REQ-1.3** Bir tarih aralığı verildiğinde yalnızca o aralıktaki etkinlikler sayılır.
-Başlangıç ve bitiş günleri aralığa dahildir.
+Başlangıç ve bitiş günleri aralığa dahildir. Tarihler Türkiye saatine (UTC+3) göre
+değerlendirilir.
 
 **REQ-1.4** Bot hesaplarının (`[bot]` ile biten adlar) etkinlikleri sayılmaz.
 
@@ -111,3 +112,6 @@ e-postası içermez.
 |---|---|---|
 | 1.0 | İlk sürüm | — |
 | 1.1 | REQ-3.3: hedef katsayısı 1,2'den 1,0'a indirildi ve ayarlanabilir yapıldı | Öğretim üyesi kararı: daha cömert puanlama |
+| 1.2 | REQ-1.3: tarihlerin Türkiye saatine göre değerlendirileceği netleştirildi | GitHub ve Taiga saatleri UTC olarak kaydediyor; gece yarısından sonraki iş bir önceki güne sayılıyordu |
+
+
