@@ -1,6 +1,6 @@
 # Test Planı — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.2)
+Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.6)
 
 ## 1. Amaç ve kapsam
 
@@ -97,7 +97,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
 | REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | [x] |
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | [x] |
-| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | [x] |
+| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | Planlandı |
 | REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | [x] |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
 | REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
