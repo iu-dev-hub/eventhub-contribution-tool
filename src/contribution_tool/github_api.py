@@ -9,7 +9,7 @@ from collections.abc import Callable, Mapping
 from typing import Any
 
 API_URL = "https://api.github.com/graphql"
-TOKEN_VARIABLE = "GITHUB_TOKEN"
+TOKEN_VARIABLE = "CONTRIBUTION_TOOL_TOKEN"
 
 Request = Callable[[str, dict[str, Any]], dict[str, Any]]
 
