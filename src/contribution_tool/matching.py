@@ -29,6 +29,15 @@ class MatchResult:
         """True when the student is linked to no account at all (REQ-2.4)."""
         return not self.github and not self.taiga
 
+    @property
+    def missing(self) -> tuple[str, ...]:
+        """Sources the student is not linked to; empty when linked to both (REQ-2.4)."""
+        return tuple(
+            name
+            for name, accounts in (("GitHub", self.github), ("Taiga", self.taiga))
+            if not accounts
+        )
+
 
 def match_students(
     students: Iterable[Student],
