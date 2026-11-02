@@ -89,10 +89,10 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | Gereksinim | Teknik | Test dosyası | Durum |
 |---|---|---|---|
 | REQ-1.1 | Denklik sınıfı | `tests/test_github_collect.py` | Planlandı |
-| REQ-1.2 | Denklik sınıfı | `tests/test_taiga_collect.py` | Planlandı |
+| REQ-1.2 | Denklik sınıfı | `tests/test_taiga_collect.py` | [x] |
 | REQ-1.3 | Sınır değer | `tests/test_date_range.py` | [x] |
 | REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | Planlandı |
-| REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | Planlandı |
+| REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | [x] |
 | REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | Planlandı |
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
 | REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | [x] |
