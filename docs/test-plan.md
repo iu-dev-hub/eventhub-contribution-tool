@@ -106,6 +106,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-3.5 | Karar tablosu | `tests/test_scoring.py` | [x] |
 | REQ-3.6 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
 | REQ-3.7 | Sınır değer | `tests/test_scoring.py` | [x] |
+| REQ-3.11 | Sınır değer, hata tahmini | `tests/test_adjustments.py` | Planlandı |
 | REQ-4.1 | Denklik sınıfı | `tests/test_guidance.py` | Planlandı |
 | REQ-4.2 | Sınır değer | `tests/test_guidance.py` | Planlandı |
 | REQ-4.3 | Hata tahmini | `tests/test_guidance.py` | Planlandı |
