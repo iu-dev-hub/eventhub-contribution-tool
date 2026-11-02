@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.3 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.4 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -92,14 +92,15 @@ medyanıyla birlikte tek cümle olarak yazar.
 **REQ-5.2** Her sayı, dayandığı kayda (PR veya Taiga kaydı) çıktıdan bağlantısıyla
 izlenebilir.
 
+**REQ-5.3** Araç tek bir komutla çalıştırılır. Öğrenci listesi, Taiga CSV klasörü (isteğe bağlı), depo, tarih aralığı, rol sütunu ve hedef katsayısı komutta verilir. Her öğrencinin rolü, notu, puanı ve hesapları, uyarılar ve hiçbir öğrenciye bağlanamayan hesaplar ekrana yazılır.
+
 ## 6. Gizlilik ve güvenlik
 
 **REQ-6.1** Öğrenci listesi, çıktı dosyaları ve token depoya commit'lenemez.
 
-**REQ-6.2** GitHub token'ı koddan değil, ortam değişkeninden okunur.
+**REQ-6.2** GitHub token'ı koddan değil,`CONTRIBUTION_TOOL_TOKEN` ortam değişkeninden okunur. Araç `GITHUB_TOKEN` değişkenini kullanmaz, çünkü bu değişken git ve gh tarafından da kullanılır.
 
-**REQ-6.3** Depodaki test verisi tamamen uydurmadır; gerçek öğrenci adı veya
-e-postası içermez.
+**REQ-6.3** Depodaki test verisi tamamen uydurmadır; gerçek öğrenci adı veya e-postası içermez.
 
 ## Kapsam dışı (v1)
 
@@ -115,6 +116,7 @@ e-postası içermez.
 | 1.1 | REQ-3.3: hedef katsayısı 1,2'den 1,0'a indirildi ve ayarlanabilir yapıldı | Öğretim üyesi kararı: daha cömert puanlama |
 | 1.2 | REQ-1.3: tarihlerin Türkiye saatine göre değerlendirileceği netleştirildi | GitHub ve Taiga saatleri UTC olarak kaydediyor; gece yarısından sonraki iş bir önceki güne sayılıyordu |
 | 1.3 | REQ-3.3: eşleşmeyen öğrencilerin medyana katılmayacağı netleştirildi | Eşleşmeyen öğrenci 0 puanla medyanı düşürüp diğerlerinin notunu haksız şekilde yükseltiyordu |
+| 1.4 | REQ-5.3 eklendi (tek komutla çalıştırma); REQ-6.2: token değişkeninin adı belirlendi | Kabul testinde GITHUB_TOKEN değişkeninin git push'u bozduğu görüldü |
 
 
 
