@@ -55,6 +55,7 @@ CONTRIBUTION_TOOL_TOKEN="github_pat_..." contribution-tool \
 | `--start`, `--end` | no | Date range, `YYYY-MM-DD`; both days are included, in Turkey time |
 | `--role` | no | Role column to use, e.g. `rol_d2`; default is the first `rol*` column |
 | `--factor` | no | Role target factor, default `1.0` (the median student gets 100) |
+| `--adjustments` | no | Instructor adjustments CSV (see below) |
 
 Run `contribution-tool --help` for the full list.
 
@@ -76,6 +77,20 @@ written as `PO`, `SM`, `Back`, `Front`, `Testçi` (or `QA`); `Dev` counts as `Ba
 In Taiga, open **Settings → Project → Reports** and download the CSV files for user
 stories, tasks and issues. Save them as `userstories.csv`, `tasks.csv` and
 `issues.csv` in one folder.
+
+### Instructor adjustments
+
+Some work leaves no trace in GitHub or Taiga. The instructor can add or subtract points
+with a written reason, in a separate file such as `data/duzeltmeler.csv`:
+
+```csv
+ad_soyad,puan,gerekce
+Test Öğrenci Bir,+10,"Backlog was created by the Scrum Master, PO led the team"
+```
+
+Points must be whole numbers. Put a reason that contains a comma in quotes. Run the
+tool with `--adjustments data/duzeltmeler.csv`; the report shows each adjustment and
+its reason next to the grade, and the final grade stays between 0 and 100.
 
 ### GitHub token
 

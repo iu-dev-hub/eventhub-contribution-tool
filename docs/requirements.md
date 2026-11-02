@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.4 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.5 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -75,6 +75,12 @@ için uyarı verir.
 **REQ-3.7** Bir rolde tek öğrenci varsa araç uyarı verir, çünkü o öğrenci yalnızca
 kendisiyle karşılaştırılır.
 
+**REQ-3.11** Öğretim üyesi, ayrı bir düzeltme dosyasıyla bir öğrencinin nihai notuna
+gerekçe yazarak puan ekleyebilir veya çıkarabilir. Gerekçesiz düzeltme ve listede
+olmayan bir öğrenci için düzeltme kabul edilmez. Nihai not 0 ile 100 arasında kalır.
+Raporda düzeltme ve gerekçesi notun yanında gösterilir. Eşleşmeyen öğrenciye düzeltme
+uygulanmaz ve uyarı verilir.
+
 ## 4. Rehberlik
 
 **REQ-4.1** Araç, her öğrenci için her ölçütte rol medyanına oranını gösterir.
@@ -117,6 +123,6 @@ izlenebilir.
 | 1.2 | REQ-1.3: tarihlerin Türkiye saatine göre değerlendirileceği netleştirildi | GitHub ve Taiga saatleri UTC olarak kaydediyor; gece yarısından sonraki iş bir önceki güne sayılıyordu |
 | 1.3 | REQ-3.3: eşleşmeyen öğrencilerin medyana katılmayacağı netleştirildi | Eşleşmeyen öğrenci 0 puanla medyanı düşürüp diğerlerinin notunu haksız şekilde yükseltiyordu |
 | 1.4 | REQ-5.3 eklendi (tek komutla çalıştırma); REQ-6.2: token değişkeninin adı belirlendi | Kabul testinde GITHUB_TOKEN değişkeninin git push'u bozduğu görüldü |
-
+| 1.5 | REQ-3.11 eklendi: gerekçeli not düzeltmesi (kanaat notu) | Kabul testinde, işini yapan bir PO'nun hikâyeleri SM tarafından açıldığı için en düşük puanı aldığı görüldü |
 
 

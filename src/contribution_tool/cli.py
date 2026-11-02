@@ -7,6 +7,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from contribution_tool.adjustments import load_adjustments
 from contribution_tool.github import collect_github
 from contribution_tool.github_api import (
     fetch_discussions,
@@ -37,6 +38,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--factor", type=float, default=DEFAULT_TARGET_FACTOR, help="role target factor"
     )
+    parser.add_argument("--adjustments", type=Path, help="instructor adjustments CSV")
     args = parser.parse_args(argv)
     if args.start and args.end and args.start > args.end:
         parser.error("--start must not be after --end")
@@ -46,7 +48,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 def run(args: argparse.Namespace) -> Report:
     """Read all inputs, download GitHub data and build the report."""
     students = load_students(args.students, role_column=args.role)
-
+    adjustments = load_adjustments(args.adjustments) if args.adjustments else []
     taiga = TaigaData()
     if args.taiga:
         paths = [args.taiga / name for name in TAIGA_FILES]
@@ -60,13 +62,30 @@ def run(args: argparse.Namespace) -> Report:
     discussions = fetch_discussions(args.repo, send)
     github = collect_github(pull_requests, discussions, args.start, args.end)
 
-    return build_report(students, github, taiga, args.factor)
+    return build_report(students, github, taiga, args.factor, adjustments)
 
 
 def format_report(report: Report) -> str:
     """Plain text summary for the terminal."""
     width = max([len("Student")] + [len(r.name) for r in report.students])
-    lines = [f"{'Student':<{width}}  {'Role':<13}  {'Grade':>9}  {'Score':>6}  Accounts"]
+    lines = [
+        f"{'Student':<{width}}  {'Role':<13}  {'Grade':>9}  {'Adj':>4}  {'Final':>5}"
+        f"  {'Score':>6}  Accounts"
+    ]
+    for r in report.students:
+        grade = "UNMATCHED" if r.unmatched else str(r.grade)
+        adjustment = f"{r.adjustment:+d}" if r.adjustment else ""
+        final = "-" if r.final is None else str(r.final)
+        accounts = ", ".join(r.accounts) or "-"
+        lines.append(
+            f"{r.name:<{width}}  {r.role:<13}  {grade:>9}  {adjustment:>4}  {final:>5}"
+            f"  {r.score:>6.1f}  {accounts}"
+        )
+
+    adjusted = [r for r in report.students if r.reasons]
+    if adjusted:
+        lines += ["", "Adjustments:"]
+        lines += [f"  - {r.name} {reason}" for r in adjusted for reason in r.reasons]
     for r in report.students:
         grade = "UNMATCHED" if r.unmatched else str(r.grade)
         accounts = ", ".join(r.accounts) or "-"

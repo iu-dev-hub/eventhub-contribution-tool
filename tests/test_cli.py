@@ -113,3 +113,16 @@ def test_invalid_dates_stop_with_usage_error(students_csv, dates):
     with pytest.raises(SystemExit) as error:
         cli.main(["--students", str(students_csv), *dates])
     assert error.value.code == 2
+
+
+# REQ-3.11 — Adjustments and their reasons are shown
+
+
+def test_adjustments_are_shown_with_reason(fake_github, students_csv, tmp_path, capsys):
+    adjustments = tmp_path / "duzeltmeler.csv"
+    adjustments.write_text(
+        "ad_soyad,puan,gerekce\nTest Öğrenci Bir,+10,Backlog SM tarafından açıldı\n",
+        encoding="utf-8",
+    )
+    assert cli.main(["--students", str(students_csv), "--adjustments", str(adjustments)]) == 0
+    assert "Test Öğrenci Bir +10: Backlog SM tarafından açıldı" in capsys.readouterr().out
