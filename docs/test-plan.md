@@ -1,6 +1,6 @@
 # Test Planı — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.6)
+Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.7)
 
 ## 1. Amaç ve kapsam
 
@@ -94,6 +94,8 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | [x] |
 | REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | [x] |
 | REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | [x] |
+| REQ-1.8 | Denklik sınıfı, sınır değer | `tests/test_taiga_history.py` | Planlandı |
+| REQ-1.9 | Denklik sınıfı | `tests/test_taiga_history.py` | Planlandı |
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
 | REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | [x] |
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | [x] |
