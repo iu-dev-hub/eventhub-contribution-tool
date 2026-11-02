@@ -102,6 +102,16 @@ def build_report(
     warnings += [
         f"{r.name}: not matched to any GitHub or Taiga account" for r in results if r.unmatched
     ]
+    # A student linked to only one source gets an incomplete score (REQ-2.4).
+    # Taiga is only checked when Taiga data was given.
+    checked = {"GitHub"} | ({"Taiga"} if taiga.users else set())
+    for match in matches:
+        missing = [source for source in match.missing if source in checked]
+        if not match.unmatched and missing:
+            warnings.append(
+                f"{match.student.name}: no {' or '.join(missing)} account found, "
+                "the grade may be incomplete"
+            )
     warnings += [
         f"{r.name}: adjustment not applied because the student is not matched"
         for r in results

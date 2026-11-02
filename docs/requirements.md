@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.5 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.6 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -44,8 +44,11 @@ eşleştirilir.
 ve büyük-küçük harf farkı gözetilmeden), e-postanın @ öncesi kısmı.
 
 **REQ-2.4** Hiçbir hesapla eşleşmeyen öğrenci, raporda açıkça "eşleşmedi" olarak
-işaretlenir. Eşleşmeyen bir öğrenci sessizce 0 puan almaz.
-*Kaynak: 1. rol dönemi değerlendirmesinde bir öğrencinin bildirdiği hata.*
+işaretlenir. Eşleşmeyen bir öğrenci sessizce 0 puan almaz. Yalnızca GitHub'la veya
+yalnızca Taiga'yla eşleşen öğrenci için, eksik kaynağı belirten bir uyarı verilir.
+Taiga verisi verilmediyse Taiga için uyarı verilmez.
+*Kaynak: 1. rol dönemi değerlendirmesinde bir öğrencinin bildirdiği hata; kısmi
+eşleşme, uçtan uca kabul testinde bulundu.*
 
 **REQ-2.5** Etkinliği olup hiçbir öğrenciye bağlanamayan hesaplar raporda ayrıca
 listelenir.
@@ -124,5 +127,5 @@ izlenebilir.
 | 1.3 | REQ-3.3: eşleşmeyen öğrencilerin medyana katılmayacağı netleştirildi | Eşleşmeyen öğrenci 0 puanla medyanı düşürüp diğerlerinin notunu haksız şekilde yükseltiyordu |
 | 1.4 | REQ-5.3 eklendi (tek komutla çalıştırma); REQ-6.2: token değişkeninin adı belirlendi | Kabul testinde GITHUB_TOKEN değişkeninin git push'u bozduğu görüldü |
 | 1.5 | REQ-3.11 eklendi: gerekçeli not düzeltmesi (kanaat notu) | Kabul testinde, işini yapan bir PO'nun hikâyeleri SM tarafından açıldığı için en düşük puanı aldığı görüldü |
-
+| 1.6 | REQ-2.4: kısmi eşleşmede uyarı | Kabul testinde, Taiga kullanıcı adı listedekinden farklı olan bir öğrencinin Taiga katkıları sayılmadı ve uyarı verilmedi |
 
