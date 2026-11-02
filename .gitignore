@@ -6,6 +6,7 @@ students*.csv
 output/
 .env
 *.token
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
