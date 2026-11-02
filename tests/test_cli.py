@@ -114,6 +114,7 @@ def test_invalid_dates_stop_with_usage_error(students_csv, dates):
         cli.main(["--students", str(students_csv), *dates])
     assert error.value.code == 2
 
+
 # REQ-3.11 — Adjustments and their reasons are shown
 
 
