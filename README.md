@@ -146,14 +146,17 @@ version.
 
 Workflow:
 
-1. Open an issue with acceptance criteria. It appears on the project board.
+1. Open an issue with acceptance criteria.
 2. Create a branch: `feat/12-short-name`, `fix/...`, `docs/...` or `chore/...`.
-3. Write the tests first, from the requirement; then the code.
-4. Open a pull request using the template. Use `Closes #12` for changes that need no
-   check with real data (docs, chore), and `Refs #12` for features and fixes, which
-   are checked with real data after merge before the issue is closed.
-5. CI must pass (`Lint (ruff)` and `Unit tests`); the branch must be up to date with
-   `main`. Pull requests are merged with squash.
+3. Write the test first and see it fail with `pytest`; then write the code. Update
+   `docs/requirements.md` in the same change if a requirement changes.
+4. Check and commit everything in one step:
+
+   ```bash
+   ruff format . && ruff check --fix . && pytest && git add -A && git commit -m "feat: ..."
+   ```
+
+5. Open a pull request with the template; merge with squash when CI passes.
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
 in English, e.g. `feat: match students to Taiga accounts`.
