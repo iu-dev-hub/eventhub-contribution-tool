@@ -1,6 +1,6 @@
 # Test Planı — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.7)
+Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.9)
 
 ## 1. Amaç ve kapsam
 
