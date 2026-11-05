@@ -94,7 +94,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | Geçiyor |
 | REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | Geçiyor |
 | REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | Geçiyor |
-| REQ-1.7 | Denklik sınıfı | `tests/test_taiga_api.py` | Planlandı |
+| REQ-1.7 | Denklik sınıfı | `tests/test_taiga_api.py` | Geçiyor |
 | REQ-1.8 | Denklik sınıfı, sınır değer | `tests/test_taiga_history.py` | Geçiyor |
 | REQ-1.9 | Denklik sınıfı | `tests/test_taiga_history.py` | Geçiyor |
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | Geçiyor |
@@ -119,5 +119,6 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` | Geçiyor |
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` | Planlandı |
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` | Planlandı |
+| REQ-6.4 | Denklik sınıfı | `tests/test_taiga_api.py` | Geçiyor |
 
 Test yazıldıkça "Durum" sütunu "Geçiyor" olarak güncellenir.
