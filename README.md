@@ -134,10 +134,15 @@ shell. The tool does not use `GITHUB_TOKEN`, because git and gh also use it.
 
 ```bash
 pip install -e ".[dev]"
+pre-commit install        # once per clone: runs ruff before every commit
 pytest
 ruff check .
 ruff format --check .
 ```
+
+The ruff version is pinned in `pyproject.toml` and in `.pre-commit-config.yaml`.
+When you update it, change both, so that your computer, the hook and CI use the same
+version.
 
 Workflow:
 

@@ -20,7 +20,8 @@ contribution-tool = "contribution_tool.cli:main"
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
-    "ruff>=0.6",
+    "ruff==0.17.3",
+    "pre-commit>=3",
 ]
 
 [tool.setuptools.packages.find]
