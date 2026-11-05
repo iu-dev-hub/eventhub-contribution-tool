@@ -1,4 +1,4 @@
-"""Matching students to GitHub and Taiga accounts (REQ-2.2 to REQ-2.5)."""
+"""Matching students to GitHub and Taiga accounts (REQ-2.2 to REQ-2.5, REQ-2.7)."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ class MatchResult:
     github: frozenset[str]
     taiga: frozenset[str]
     methods: tuple[str, ...]
+    unused: tuple[str, ...] = ()  # values in the student list that matched no account
 
     @property
     def unmatched(self) -> bool:
@@ -91,7 +92,17 @@ def _match_one(
             if taiga:
                 methods.append("Taiga: e-mail prefix")
 
-    return MatchResult(student, frozenset(github), frozenset(taiga), tuple(methods))
+    # REQ-2.7: values in the student list that point to no active account
+    unused = [name for name in student.usernames if name not in gh_users | tg_users.keys()]
+    unused += [
+        email
+        for email in student.emails
+        if email not in gh_emails and email.split("@")[0] not in tg_users
+    ]
+
+    return MatchResult(
+        student, frozenset(github), frozenset(taiga), tuple(methods), tuple(dict.fromkeys(unused))
+    )
 
 
 def unlinked_accounts(results: Iterable[MatchResult], active_accounts: Iterable[str]) -> list[str]:

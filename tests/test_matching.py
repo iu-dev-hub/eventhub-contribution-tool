@@ -136,3 +136,39 @@ def test_student_linked_only_to_github_misses_taiga():
 def test_student_linked_only_to_taiga_misses_github():
     student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))
     assert match(student, taiga_users={"ogrencibir": ""}).missing == ("GitHub",)
+
+
+# REQ-2.7 — Values in the student list that match no account are reported
+# Source: acceptance test, a Taiga display name was written instead of the username
+
+
+def test_unknown_username_is_reported_as_unused():
+    student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir", "ayşe"))
+    result = match(student, github_users=["ogrencibir"])
+    assert result.unused == ("ayşe",)
+
+
+def test_email_not_used_anywhere_is_reported_as_unused():
+    student = Student(name="Test Öğrenci Bir", emails=("bir@example.org",))
+    assert match(student, github_users=["baska"]).unused == ("bir@example.org",)
+
+
+def test_email_used_in_commits_is_not_unused():
+    student = Student(name="Test Öğrenci Bir", emails=("bir@example.org",))
+    result = match(student, github_emails={"bir@example.org": ["ogrencibir"]})
+    assert result.unused == ()
+
+
+def test_email_whose_prefix_is_a_taiga_user_is_not_unused():
+    student = Student(name="Test Öğrenci Beş", emails=("bes@example.org",))
+    assert match(student, taiga_users={"bes": ""}).unused == ()
+
+
+def test_username_found_only_in_taiga_is_not_unused():
+    student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))
+    assert match(student, taiga_users={"ogrencibir": ""}).unused == ()
+
+
+def test_repeated_unused_value_is_reported_once():
+    student = Student(name="Test Öğrenci Bir", usernames=("yanlis", "yanlis"))
+    assert match(student).unused == ("yanlis",)

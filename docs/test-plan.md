@@ -1,10 +1,10 @@
 # Test Planı — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.9)
+Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.10)
 
 ## 1. Amaç ve kapsam
 
-Bu plan, aracın `docs/requirements.md` dokümanındaki 26 gereksinimi karşıladığını
+Bu plan, aracın `docs/requirements.md` dokümanındaki 33 gereksinimi karşıladığını
 doğrulamak için izlenecek yaklaşımı tanımlar.
 
 **Test edilecekler:** veri toplama, öğrenci eşleme, puanlama, rehberlik, Excel çıktısı,
@@ -102,6 +102,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | Geçiyor |
 | REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | Geçiyor |
 | REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | Geçiyor |
+| REQ-2.7 | Denklik sınıfı, hata tahmini | `tests/test_matching.py`, `tests/test_report.py` | Planlandı |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
 | REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | Geçiyor |
 | REQ-3.3 | Sınır değer | `tests/test_scoring.py` | Geçiyor |

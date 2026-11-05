@@ -157,3 +157,18 @@ def test_unmatched_student_gets_only_the_unmatched_warning():
     report = build_report([student], github_data({"x": {"pr_opened": 1}}), taiga)
     student_warnings = [w for w in report.warnings if w.startswith("Test Öğrenci Üç")]
     assert student_warnings == ["Test Öğrenci Üç: not matched to any GitHub or Taiga account"]
+
+
+# REQ-2.7 — Unused values in the student list appear as warnings
+
+
+def test_unused_value_appears_as_warning():
+    student = Student(name="Test Öğrenci Bir", role="Testçi", usernames=("bir", "ayşe"))
+    report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga_data())
+    assert "Test Öğrenci Bir: 'ayşe' in the student list matched no account" in report.warnings
+
+
+def test_no_unused_warning_when_every_value_matches():
+    student = Student(name="Test Öğrenci Bir", role="Back", usernames=("bir",))
+    report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga_data())
+    assert not any("matched no account" in w for w in report.warnings)
