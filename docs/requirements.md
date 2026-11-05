@@ -112,8 +112,8 @@ uygulanmaz ve uyarı verilir.
 
 **REQ-4.1** Araç, her öğrenci için her ölçütte rol medyanına oranını gösterir.
 
-**REQ-4.2** Ağırlığı belirlenen eşiğin altında olan ölçütler, o rol için oran
-gösterilmeden boş bırakılır.
+**REQ-4.2** Ağırlığı rol için 1'in altında olan ölçütler ve roldeki medyanı 0 olan
+ölçütler karşılaştırılmaz, boş bırakılır.
 
 **REQ-4.3** Araç, her öğrenci için en zayıf önemli ölçütü, öğrencinin sayısı ve rol
 medyanıyla birlikte tek cümle olarak yazar.
