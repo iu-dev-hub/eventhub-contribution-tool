@@ -57,6 +57,7 @@ contribution-tool \
 | `--factor` | no | Role target factor, default `1.0` (the median student gets 100) |
 | `--adjustments` | no | Instructor adjustments CSV (see below) |
 | `--no-taiga-history` | no | Use only the Taiga CSV exports, without logging in to Taiga |
+| `--excel` | no | Also save the report to an Excel file, e.g. `data/rapor_d1.xlsx` |
 
 Run `contribution-tool --help` for the full list.
 
