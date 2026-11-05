@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eventhub-contribution-tool"
-version = "0.1.0"
+version = "0.9.0b1"
 description = "Contribution analysis tool for the EventHub course project (GitHub + Taiga)"
 readme = "README.md"
 license = { text = "MIT" }
