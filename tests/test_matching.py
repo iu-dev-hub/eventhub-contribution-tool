@@ -115,3 +115,24 @@ def test_no_unlinked_accounts_when_all_belong_to_students():
     students = [Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))]
     results = match_students(students, ["ogrencibir"], {}, {})
     assert unlinked_accounts(results, ["ogrencibir"]) == []
+
+
+# REQ-2.4 — A student linked to only one source is reported as missing the other
+# Source: acceptance test, a student's Taiga username was different from the list
+
+
+def test_student_linked_to_both_sources_misses_nothing():
+    student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))
+    result = match(student, github_users=["ogrencibir"], taiga_users={"ogrencibir": ""})
+    assert result.missing == ()
+
+
+def test_student_linked_only_to_github_misses_taiga():
+    student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))
+    result = match(student, github_users=["ogrencibir"], taiga_users={"baska": "Başka Kişi"})
+    assert result.missing == ("Taiga",)
+
+
+def test_student_linked_only_to_taiga_misses_github():
+    student = Student(name="Test Öğrenci Bir", usernames=("ogrencibir",))
+    assert match(student, taiga_users={"ogrencibir": ""}).missing == ("GitHub",)
