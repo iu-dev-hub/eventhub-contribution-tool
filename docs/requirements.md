@@ -136,7 +136,11 @@ CSV verisiyle birleştirilir; bu adım bir seçenekle atlanabilir.
 
 **REQ-6.1** Öğrenci listesi, çıktı dosyaları ve token depoya commit'lenemez.
 
-**REQ-6.2** GitHub token'ı koddan değil,`CONTRIBUTION_TOOL_TOKEN` ortam değişkeninden okunur. Araç `GITHUB_TOKEN` değişkenini kullanmaz, çünkü bu değişken git ve gh tarafından da kullanılır.
+**REQ-6.2** GitHub token'ı koddan okunmaz. Önce `CONTRIBUTION_TOOL_TOKEN` ortam
+değişkeninde, yoksa repo dışındaki ayar dosyasında aranır:
+`~/.config/contribution-tool/token` (Windows: `%APPDATA%\contribution-tool\token`).
+Dosyayı başka kullanıcılar okuyabiliyorsa uyarı verilir. Araç `GITHUB_TOKEN`
+değişkenini kullanmaz, çünkü bu değişken git ve gh tarafından da kullanılır.
 
 **REQ-6.3** Depodaki test verisi tamamen uydurmadır; gerçek öğrenci adı veya e-postası içermez.
 
