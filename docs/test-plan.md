@@ -88,35 +88,37 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 
 | Gereksinim | Teknik | Test dosyası | Durum |
 |---|---|---|---|
-| REQ-1.1 | Denklik sınıfı | `tests/test_github_collect.py` | [x] |
-| REQ-1.2 | Denklik sınıfı | `tests/test_taiga_collect.py` | [x] |
-| REQ-1.3 | Sınır değer | `tests/test_date_range.py` | [x] |
-| REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | [x] |
-| REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | [x] |
-| REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | [x] |
-| REQ-1.8 | Denklik sınıfı, sınır değer | `tests/test_taiga_history.py` | [x] |
-| REQ-1.9 | Denklik sınıfı | `tests/test_taiga_history.py` | [x] |
-| REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | [x] |
-| REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | [x] |
-| REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | [x] |
-| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | [x] |
-| REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | [x] |
+| REQ-1.1 | Denklik sınıfı | `tests/test_github_collect.py` | Geçiyor |
+| REQ-1.2 | Denklik sınıfı | `tests/test_taiga_collect.py` | Geçiyor |
+| REQ-1.3 | Sınır değer | `tests/test_date_range.py` | Geçiyor |
+| REQ-1.4 | Denklik sınıfı | `tests/test_github_collect.py` | Geçiyor |
+| REQ-1.5 | Denklik sınıfı | `tests/test_taiga_collect.py` | Geçiyor |
+| REQ-1.6 | Hata tahmini | `tests/test_github_collect.py` | Geçiyor |
+| REQ-1.7 | Denklik sınıfı | `tests/test_taiga_api.py` | Geçiyor |
+| REQ-1.8 | Denklik sınıfı, sınır değer | `tests/test_taiga_history.py` | Geçiyor |
+| REQ-1.9 | Denklik sınıfı | `tests/test_taiga_history.py` | Geçiyor |
+| REQ-2.1 | Denklik sınıfı | `tests/test_students.py` | Geçiyor |
+| REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` | Geçiyor |
+| REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` | Geçiyor |
+| REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` | Geçiyor |
+| REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` | Geçiyor |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
-| REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
-| REQ-3.3 | Sınır değer | `tests/test_scoring.py` | [x] |
-| REQ-3.4 | Sınır değer | `tests/test_scoring.py` | [x] |
-| REQ-3.5 | Karar tablosu | `tests/test_scoring.py` | [x] |
-| REQ-3.6 | Denklik sınıfı | `tests/test_scoring.py` | [x] |
-| REQ-3.7 | Sınır değer | `tests/test_scoring.py` | [x] |
-| REQ-3.11 | Sınır değer, hata tahmini | `tests/test_adjustments.py` | [x] |
+| REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.3 | Sınır değer | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.4 | Sınır değer | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.5 | Karar tablosu | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.6 | Denklik sınıfı | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.7 | Sınır değer | `tests/test_scoring.py` | Geçiyor |
+| REQ-3.11 | Sınır değer, hata tahmini | `tests/test_adjustments.py` | Geçiyor |
 | REQ-4.1 | Denklik sınıfı | `tests/test_guidance.py` | Planlandı |
 | REQ-4.2 | Sınır değer | `tests/test_guidance.py` | Planlandı |
 | REQ-4.3 | Hata tahmini | `tests/test_guidance.py` | Planlandı |
 | REQ-5.1 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
 | REQ-5.2 | Sistem testi | `tests/test_excel_output.py` | Planlandı |
-| REQ-5.3 | Sistem testi | `tests/test_cli.py` | [x] |
-| REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` | [x] |
+| REQ-5.3 | Sistem testi | `tests/test_cli.py` | Geçiyor |
+| REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` | Geçiyor |
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` | Planlandı |
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` | Planlandı |
+| REQ-6.4 | Denklik sınıfı | `tests/test_taiga_api.py` | Geçiyor |
 
-Test yazıldıkça "Durum" sütunu [x] olarak güncellenir.
+Test yazıldıkça "Durum" sütunu "Geçiyor" olarak güncellenir.

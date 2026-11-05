@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.7 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.8 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -31,6 +31,10 @@ değerlendirilir.
 **REQ-1.5** Durumu "Reddedildi" olan hata kayıtları sayılmaz.
 
 **REQ-1.6** Bir öğrencinin kendi PR'ına yaptığı inceleme, kod incelemesi olarak sayılmaz.
+
+**REQ-1.7** Araç, Taiga CSV dışa aktarımındaki her kullanıcı hikâyesi, görev ve hata
+kaydının değişiklik geçmişini Taiga API'sinden indirir. Kayıtlar CSV'deki `id`
+sütunuyla bulunur.
 
 **REQ-1.8** Bir kullanıcı hikâyesinin durumunu "bitti" grubundaki bir duruma (Bitti,
 Done, Kapandı, Closed) geçiren kullanıcı için bir hikâye kabulü sayılır. Bitti
@@ -121,6 +125,11 @@ izlenebilir.
 
 **REQ-6.3** Depodaki test verisi tamamen uydurmadır; gerçek öğrenci adı veya e-postası içermez.
 
+**REQ-6.4** Araç, Taiga'ya öğretim üyesinin hesabıyla her çalıştırmada yeniden giriş
+yapar. Kullanıcı adı `CONTRIBUTION_TOOL_TAIGA_USERNAME` ortam değişkeninden okunur.
+Şifre `CONTRIBUTION_TOOL_TAIGA_PASSWORD` değişkeninden okunur; yoksa ekranda gösterilmeden
+sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
+
 ## Kapsam dışı (v1)
 
 - Yerel dil modeliyle nitel değerlendirme (v2'de ele alınacak)
@@ -138,4 +147,5 @@ izlenebilir.
 | 1.4 | REQ-5.3 eklendi (tek komutla çalıştırma); REQ-6.2: token değişkeninin adı belirlendi | Kabul testinde GITHUB_TOKEN değişkeninin git push'u bozduğu görüldü |
 | 1.5 | REQ-3.11 eklendi: gerekçeli not düzeltmesi (kanaat notu) | Kabul testinde, işini yapan bir PO'nun hikâyeleri SM tarafından açıldığı için en düşük puanı aldığı görüldü |
 | 1.6 | REQ-2.4: kısmi eşleşmede uyarı | Kabul testinde, Taiga kullanıcı adı listedekinden farklı olan bir öğrencinin Taiga katkıları sayılmadı ve uyarı verilmedi |
-
+| 1.7 | REQ-1.8 ve REQ-1.9 eklendi: Taiga değişiklik geçmişinden hikâye kabulü ve yorum sayımı | Taiga CSV'si durumu kimin değiştirdiğini içermiyor; testçi ve PO işleri görünmüyordu |
+| 1.8 | REQ-1.7 ve REQ-6.4 eklendi: Taiga geçmişinin indirilmesi ve Taiga girişi | Taiga projesi özel; geçmişi okumak için öğretim üyesinin hesabıyla giriş gerekiyor |
