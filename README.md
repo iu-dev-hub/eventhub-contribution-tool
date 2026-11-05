@@ -56,6 +56,7 @@ CONTRIBUTION_TOOL_TOKEN="github_pat_..." contribution-tool \
 | `--role` | no | Role column to use, e.g. `rol_d2`; default is the first `rol*` column |
 | `--factor` | no | Role target factor, default `1.0` (the median student gets 100) |
 | `--adjustments` | no | Instructor adjustments CSV (see below) |
+| `--no-taiga-history` | no | Use only the Taiga CSV exports, without logging in to Taiga |
 
 Run `contribution-tool --help` for the full list.
 
@@ -77,6 +78,21 @@ written as `PO`, `SM`, `Back`, `Front`, `Testçi` (or `QA`); `Dev` counts as `Ba
 In Taiga, open **Settings → Project → Reports** and download the CSV files for user
 stories, tasks and issues. Save them as `userstories.csv`, `tasks.csv` and
 `issues.csv` in one folder.
+
+### Taiga login
+
+Taiga's CSV export does not show who changed a status, so a tester who moves stories
+to Done would be invisible. When `--taiga` is given, the tool also downloads the change
+history of each item. The project is private, so the tool logs in with your Taiga
+account at every run:
+
+```bash
+CONTRIBUTION_TOOL_TAIGA_USERNAME="your-taiga-username" contribution-tool ...
+```
+
+The password is asked on screen without being shown, and is never stored. If you sign
+in to Taiga with GitHub, set a password in your Taiga profile first. Use
+`--no-taiga-history` to skip this step.
 
 ### Instructor adjustments
 

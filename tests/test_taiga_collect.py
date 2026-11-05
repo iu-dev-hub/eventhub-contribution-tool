@@ -6,6 +6,7 @@ import pytest
 
 from contribution_tool.taiga import TaigaData, collect_taiga, load_csv, merge_taiga
 
+
 def row(**values):
     base = {
         "owner": "",
@@ -144,6 +145,7 @@ def test_load_csv_from_url(monkeypatch):
 
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
     assert load_csv("https://example.org/issues.csv") == [{"owner": "ogrencibir", "status": "Yeni"}]
+
 
 # CSV data and history data are combined
 

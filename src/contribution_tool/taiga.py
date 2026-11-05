@@ -112,6 +112,7 @@ def _remember_users(data: TaigaData, row: Row) -> None:
             full_name = row.get(name_column) or data.users.get(username, "")
             data.users[username] = full_name
 
+
 def merge_taiga(*parts: TaigaData) -> TaigaData:
     """Combine Taiga data from the CSV export and from the change history."""
     merged = TaigaData()

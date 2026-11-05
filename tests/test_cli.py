@@ -34,6 +34,7 @@ def fake_github(monkeypatch):
     monkeypatch.setattr(cli, "fetch_pull_requests", lambda repo, send: PULL_REQUESTS)
     monkeypatch.setattr(cli, "fetch_discussions", lambda repo, send: [])
 
+
 @pytest.fixture
 def fake_taiga(monkeypatch):
     """Taiga login and history download replaced by fakes; returns the fake request."""
@@ -50,6 +51,7 @@ def fake_taiga(monkeypatch):
     fake_send.histories = histories
     fake_send.asked = asked
     return fake_send
+
 
 @pytest.fixture
 def students_csv(tmp_path):
@@ -68,7 +70,7 @@ def write_taiga(folder, files=cli.TAIGA_FILES):
 # REQ-5.3 — One command runs the whole tool and prints a summary
 
 
-def test_full_run_prints_grades(fake_github, fake_taiga, students_csv, tmp_path, capsys)::
+def test_full_run_prints_grades(fake_github, fake_taiga, students_csv, tmp_path, capsys):
     taiga = write_taiga(tmp_path / "taiga")
     code = cli.main(["--students", str(students_csv), "--taiga", str(taiga), "--role", "rol_d1"])
     output = capsys.readouterr().out
@@ -144,6 +146,7 @@ def test_adjustments_are_shown_with_reason(fake_github, students_csv, tmp_path, 
     )
     assert cli.main(["--students", str(students_csv), "--adjustments", str(adjustments)]) == 0
     assert "Test Öğrenci Bir +10: Backlog SM tarafından açıldı" in capsys.readouterr().out
+
 
 # REQ-1.7 to REQ-1.9 — Taiga history is downloaded and counted when a Taiga folder is given
 
