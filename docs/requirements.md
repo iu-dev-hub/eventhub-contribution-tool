@@ -80,8 +80,7 @@ yalnızca REQ-2.4'teki uyarı verilir.
 
 ## 3. Puanlama
 
-**REQ-3.1** Her ölçütün her rol için ayrı bir ağırlığı vardır. Ağırlıklar çıktı
-dosyasında değiştirilebilir ve puanlar yeniden hesaplanır.
+
 
 **REQ-3.2** Bir öğrencinin puanı, ölçüt sayılarının kendi rolünün ağırlıklarıyla
 çarpılıp toplanmasıdır.
@@ -123,8 +122,7 @@ medyanıyla birlikte tek cümle olarak yazar.
 
 **REQ-5.1** Araç, sonuçları tek bir Excel dosyasına yazar.
 
-**REQ-5.2** Her sayı, dayandığı kayda (PR veya Taiga kaydı) çıktıdan bağlantısıyla
-izlenebilir.
+
 
 **REQ-5.3** Araç tek bir komutla çalıştırılır. Öğrenci listesi, Taiga CSV klasörü
 (isteğe bağlı), depo, tarih aralığı, rol sütunu ve hedef katsayısı komutta verilir.
@@ -151,10 +149,14 @@ sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 
 ## Kapsam dışı (v1)
 
-- Yerel dil modeliyle nitel değerlendirme (v2'de ele alınacak)
-- Web arayüzü
-- Taiga API'sine doğrudan bağlanma (CSV dışa aktarımı kullanılır)
-
+- **Ağırlıkların Excel'de değiştirilmesi** (eski REQ-3.1). Excel formülleri karmaşık ve
+  test edilmesi zor. Ağırlıklar `src/contribution_tool/scoring.py` içinde tek bir
+  tabloda duruyor; değiştirmek bir PR ile yapılır.
+- **Her sayının kaynağına bağlantı** (eski REQ-5.2). Her PR ve Taiga kaydının ayrıca
+  saklanmasını gerektiriyor. Kontrol için uyarılar, hesap listeleri ve GitHub ile
+  Taiga'nın kendi arayüzleri yeterli.
+- **Yerel dil modeliyle nitel değerlendirme** (v2'de ele alınabilir).
+- **Web arayüzü.**
 
 
 

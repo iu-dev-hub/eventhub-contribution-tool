@@ -4,7 +4,7 @@ Dayanak: `docs/requirements.md`
 
 ## 1. Amaç ve kapsam
 
-Bu plan, aracın `docs/requirements.md` dokümanındaki 33 gereksinimi karşıladığını
+Bu plan, aracın `docs/requirements.md` dosyasındaki tüm gereksinimleri karşıladığını
 doğrulamak için izlenecek yaklaşımı tanımlar.
 
 **Test edilecekler:** veri toplama, öğrenci eşleme, puanlama, rehberlik, Excel çıktısı,
@@ -15,6 +15,8 @@ gizlilik kuralları.
 - Excel'in formül hesaplama motoru. Formüllerin doğru yazıldığı test edilir; Excel'in
   onları doğru hesapladığı varsayılır.
 - Kapsam dışı (v1) özellikler: nitel değerlendirme, web arayüzü.
+- Excel'in dosyayı nasıl gösterdiği. Dosyanın içeriği (değerler, sayfalar, renk
+  skalası) test edilir.
 
 ## 2. Test seviyeleri
 
@@ -104,7 +106,6 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` |
 | REQ-2.6 | Denklik sınıfı | `tests/test_students.py` |
 | REQ-2.7 | Denklik sınıfı, hata tahmini | `tests/test_matching.py`, `tests/test_report.py` |
-| REQ-3.1 | Sistem testi | `tests/test_excel_output.py` |
 | REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` |
 | REQ-3.3 | Sınır değer | `tests/test_scoring.py` |
 | REQ-3.4 | Sınır değer | `tests/test_scoring.py` |
@@ -116,7 +117,6 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-4.2 | Sınır değer | `tests/test_guidance.py` |
 | REQ-4.3 | Hata tahmini | `tests/test_guidance.py` |
 | REQ-5.1 | Sistem testi | `tests/test_excel_output.py` |
-| REQ-5.2 | Sistem testi | `tests/test_excel_output.py` |
 | REQ-5.3 | Sistem testi | `tests/test_cli.py` |
 | REQ-6.1 | Denklik sınıfı | `tests/test_privacy.py` |
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` |
