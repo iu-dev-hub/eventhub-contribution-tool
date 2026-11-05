@@ -112,11 +112,12 @@ def build_report(
                 f"{match.student.name}: no {' or '.join(missing)} account found, "
                 "the grade may be incomplete"
             )
-    # Unmatched students already have one warning; all their values are unused anyway
+    # Unused values are only reported for partially matched students, where they may
+    # explain the missing source; for fully matched students they change nothing
     warnings += [
         f"{match.student.name}: '{value}' in the student list matched no account"
         for match in matches
-        if not match.unmatched
+        if not match.unmatched and any(source in checked for source in match.missing)
         for value in match.unused
     ]
     warnings += [

@@ -162,10 +162,25 @@ def test_unmatched_student_gets_only_the_unmatched_warning():
 # REQ-2.7 — Unused values in the student list appear as warnings
 
 
-def test_unused_value_appears_as_warning():
+def test_unused_value_appears_as_warning_when_a_source_is_missing():
     student = Student(name="Test Öğrenci Bir", role="Testçi", usernames=("bir", "ayşe"))
-    report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga_data())
+    taiga = taiga_data({"ayseshn8": {"stories_accepted": 3}}, {"ayseshn8": "Ayşe"})
+    report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga)
     assert "Test Öğrenci Bir: 'ayşe' in the student list matched no account" in report.warnings
+
+
+def test_no_unused_warning_when_linked_to_both_sources():
+    # Acceptance test: every student had warnings for a display name and an e-mail not
+    # used in commits, although they were linked to GitHub and Taiga anyway
+    student = Student(
+        name="Test Öğrenci Bir",
+        role="Back",
+        usernames=("bir", "test öğrenci bir"),
+        emails=("bir@example.org",),
+    )
+    taiga = taiga_data({"t.bir": {"tasks_closed": 1}}, {"t.bir": "Test Öğrenci Bir"})
+    report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga)
+    assert not any("matched no account" in w for w in report.warnings)
 
 
 def test_no_unused_warning_when_every_value_matches():
