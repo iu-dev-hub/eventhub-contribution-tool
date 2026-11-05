@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.10 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.9 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -159,5 +159,5 @@ sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 | 1.7 | REQ-1.8 ve REQ-1.9 eklendi: Taiga değişiklik geçmişinden hikâye kabulü ve yorum sayımı | Taiga CSV'si durumu kimin değiştirdiğini içermiyor; testçi ve PO işleri görünmüyordu |
 | 1.8 | REQ-1.7 ve REQ-6.4 eklendi: Taiga geçmişinin indirilmesi ve Taiga girişi | Taiga projesi özel; geçmişi okumak için öğretim üyesinin hesabıyla giriş gerekiyor |
 | 1.9 | REQ-5.3: Taiga değişiklik geçmişi komuta bağlandı | Testçi ve PO işlerinin nota yansıması |
-| 1.10 | REQ-2.7 eklendi: listede hiçbir hesapla eşleşmeyen değer için uyarı | Kabul testinde listeye Taiga görünen adı yazılmıştı; araç bunu sessizce yok saydı |
+
 

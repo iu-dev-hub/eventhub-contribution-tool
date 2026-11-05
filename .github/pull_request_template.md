@@ -1,27 +1,13 @@
-## Related issue
+## Issue
 
-<!-- Doğrulama gerekmiyorsa (chore, docs): Closes #12  -->
-<!-- Gerçek veriyle doğrulanacaksa (feat, fix): Refs #12 -->
-<!--   Birleşince kartı Ready for test'e taşıyın; doğruladıktan sonra issue'yu kapatın. -->
+<!-- chore, docs: Closes #12 · feat, fix (checked with real data after merge): Refs #12 -->
 
 ## What changed?
 
 ## How was it tested?
 
-- Unit tests:
-- Manual check:
-
 ## AI usage
 
-- Tool:
-- Used for:
-- What I changed / corrected in the AI output:
+<!-- Tool, what it was used for, what you corrected. "None" if not used. -->
 
-## Checklist
-
-- [ ] Yazdığım kodun tamamını okudum ve açıklayabilirim
-- [ ] Yeni kod için testler yazdım ve hepsi geçiyor (`pytest`)
-- [ ] `ruff check .` ve `ruff format .` çalıştırdım
-- [ ] Öğrenci verisi (e-posta, not, ad), token veya şifre eklemedim
-- [ ] Öz inceleme yaptım: değişikliği PR ekranında satır satır okudum
-
+- [ ] No personal data, tokens or passwords added
