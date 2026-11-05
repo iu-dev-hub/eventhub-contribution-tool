@@ -1,7 +1,5 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.9 · Kapsam: v1 (nicel değerlendirme)
-
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
 
@@ -67,10 +65,18 @@ eşleşme, uçtan uca kabul testinde bulundu.*
 **REQ-2.5** Etkinliği olup hiçbir öğrenciye bağlanamayan hesaplar raporda ayrıca
 listelenir.
 
-**REQ-2.7** Öğrenci listesindeki bir kullanıcı adı veya e-posta hiçbir etkin GitHub ya
-da Taiga hesabıyla eşleşmezse, öğrenci ve değerle birlikte uyarı verilir. Hiçbir hesapla
-eşleşmeyen öğrenci için yalnızca REQ-2.4'teki uyarı verilir.
-*Kaynak: kabul testinde, Taiga kullanıcı adı yerine görünen adın yazıldığı bulundu.*
+**REQ-2.6** Öğrenci listesinde `ekip` ile başlayan bir veya daha fazla ekip sütunu
+olabilir (ör. `ekip_d1`, `ekip_d2`). Kullanılacak ekip sütunu, rol sütunu gibi seçilir;
+seçilmezse ilk `ekip` sütunu kullanılır. Ekip sütunları kullanıcı adı olarak okunmaz.
+Bir öğrencinin başka ekiplere katkısı yine kendisine sayılır; ekip sütunu yalnızca
+hangi ekip puanından pay alacağını belirler.
+
+**REQ-2.7** GitHub'la veya Taiga'yla eşleşmeyen bir öğrenci için, listedeki hiçbir etkin
+hesapla eşleşmeyen kullanıcı adları ve e-postalar uyarıda gösterilir. İki kaynağa da
+bağlanan öğrenci için bu değerler gösterilmez. Hiçbir hesapla eşleşmeyen öğrenci için
+yalnızca REQ-2.4'teki uyarı verilir.
+*Kaynak: kabul testinde, Taiga kullanıcı adı yerine görünen adın yazıldığı bulundu.
+İlk sürümde uyarı her öğrencide çıkıyordu ve asıl uyarıları gölgeliyordu.*
 
 ## 3. Puanlama
 
@@ -145,19 +151,6 @@ sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 - Web arayüzü
 - Taiga API'sine doğrudan bağlanma (CSV dışa aktarımı kullanılır)
 
-## Değişiklik geçmişi
 
-| Sürüm | Değişiklik | Neden |
-|---|---|---|
-| 1.0 | İlk sürüm | — |
-| 1.1 | REQ-3.3: hedef katsayısı 1,2'den 1,0'a indirildi ve ayarlanabilir yapıldı | Öğretim üyesi kararı: daha cömert puanlama |
-| 1.2 | REQ-1.3: tarihlerin Türkiye saatine göre değerlendirileceği netleştirildi | GitHub ve Taiga saatleri UTC olarak kaydediyor; gece yarısından sonraki iş bir önceki güne sayılıyordu |
-| 1.3 | REQ-3.3: eşleşmeyen öğrencilerin medyana katılmayacağı netleştirildi | Eşleşmeyen öğrenci 0 puanla medyanı düşürüp diğerlerinin notunu haksız şekilde yükseltiyordu |
-| 1.4 | REQ-5.3 eklendi (tek komutla çalıştırma); REQ-6.2: token değişkeninin adı belirlendi | Kabul testinde GITHUB_TOKEN değişkeninin git push'u bozduğu görüldü |
-| 1.5 | REQ-3.11 eklendi: gerekçeli not düzeltmesi (kanaat notu) | Kabul testinde, işini yapan bir PO'nun hikâyeleri SM tarafından açıldığı için en düşük puanı aldığı görüldü |
-| 1.6 | REQ-2.4: kısmi eşleşmede uyarı | Kabul testinde, Taiga kullanıcı adı listedekinden farklı olan bir öğrencinin Taiga katkıları sayılmadı ve uyarı verilmedi |
-| 1.7 | REQ-1.8 ve REQ-1.9 eklendi: Taiga değişiklik geçmişinden hikâye kabulü ve yorum sayımı | Taiga CSV'si durumu kimin değiştirdiğini içermiyor; testçi ve PO işleri görünmüyordu |
-| 1.8 | REQ-1.7 ve REQ-6.4 eklendi: Taiga geçmişinin indirilmesi ve Taiga girişi | Taiga projesi özel; geçmişi okumak için öğretim üyesinin hesabıyla giriş gerekiyor |
-| 1.9 | REQ-5.3: Taiga değişiklik geçmişi komuta bağlandı | Testçi ve PO işlerinin nota yansıması |
 
 

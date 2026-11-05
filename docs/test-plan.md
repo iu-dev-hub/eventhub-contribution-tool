@@ -1,6 +1,6 @@
 # Test Planı — EventHub Katkı Aracı
 
-Sürüm: 1.0 · Kapsam: v1 · Dayanak: `docs/requirements.md` (sürüm 1.10)
+Dayanak: `docs/requirements.md` 
 
 ## 1. Amaç ve kapsam
 
@@ -102,6 +102,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` |
 | REQ-2.4 | Hata tahmini (regresyon) | `tests/test_matching.py` |
 | REQ-2.5 | Denklik sınıfı | `tests/test_matching.py` |
+| REQ-2.6 | Denklik sınıfı | `tests/test_students.py` |
 | REQ-2.7 | Denklik sınıfı, hata tahmini | `tests/test_matching.py`, `tests/test_report.py` |
 | REQ-3.1 | Sistem testi | `tests/test_excel_output.py` |
 | REQ-3.2 | Denklik sınıfı | `tests/test_scoring.py` |
@@ -122,4 +123,4 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` |
 | REQ-6.4 | Denklik sınıfı | `tests/test_taiga_api.py` |
 
-Test yazıldıkça "Durum" sütunu "Geçiyor" olarak güncellenir.
+
