@@ -1,7 +1,8 @@
-"""Tests for privacy and security rules (REQ-6.2)."""
+"""Tests for privacy and security rules (REQ-6.1 to REQ-6.3)."""
 
 import os
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -88,3 +89,52 @@ def test_no_token_is_written_in_source_code():
     pattern = re.compile(r"(ghp_|github_pat_)[A-Za-z0-9_]{10,}")
     leaks = [str(path) for path in SOURCE.rglob("*.py") if pattern.search(path.read_text())]
     assert leaks == []
+
+
+# REQ-6.1 — Student data, output files and secrets cannot be committed
+
+ROOT = Path(__file__).parent.parent
+in_git = pytest.mark.skipif(
+    subprocess.run(["git", "-C", str(ROOT), "rev-parse"], capture_output=True).returncode != 0,
+    reason="not a git checkout",
+)
+
+
+@in_git
+@pytest.mark.parametrize(
+    "path",
+    [
+        "data/ogrenciler.csv",
+        "data/taiga/issues.csv",
+        "data/duzeltmeler_d1.csv",
+        "data/rapor_d1.xlsx",
+        "ogrenciler.csv",
+        "rapor.xlsx",
+        ".env",
+    ],
+)
+def test_private_files_are_ignored_by_git(path):
+    ignored = subprocess.run(["git", "-C", str(ROOT), "check-ignore", "-q", path])
+    assert ignored.returncode == 0, f"{path} is not ignored by .gitignore"
+
+
+@in_git
+def test_no_private_file_is_committed():
+    files = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True, check=True
+    ).stdout.split()
+    private = [f for f in files if f.startswith("data/") or f.endswith((".xlsx", ".xls", ".env"))]
+    assert private == []
+
+
+# REQ-6.3 — Test data is made up: e-mail addresses use reserved example domains
+
+
+def test_test_data_uses_only_example_email_domains():
+    email = re.compile(r"[\w.+-]+@([\w-]+(?:\.[\w-]+)+)")
+    domains = {
+        match.lower()
+        for path in Path(__file__).parent.rglob("*.py")
+        for match in email.findall(path.read_text(encoding="utf-8"))
+    }
+    assert domains <= {"example.org", "example.com"}, f"real-looking domains: {domains}"
