@@ -40,7 +40,7 @@ pip install -e .
 All real data goes into the `data/` folder, which is never committed.
 
 ```bash
-CONTRIBUTION_TOOL_TOKEN="github_pat_..." contribution-tool \
+contribution-tool \
     --students data/ogrenciler.csv \
     --taiga data/taiga \
     --start 2026-09-21 --end 2026-10-19 \
@@ -113,9 +113,17 @@ its reason next to the grade, and the final grade stays between 0 and 100.
 The tool needs a GitHub token with **read-only** access to public repositories:
 GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens.
 
-The token is read from the `CONTRIBUTION_TOOL_TOKEN` environment variable. Write it in
-front of the command, as above, instead of using `export`, so it does not stay in your
-shell. The tool does not use `GITHUB_TOKEN`, because git and gh also use it.
+Save the token once in a file outside the repository, readable only by you:
+
+```bash
+mkdir -p ~/.config/contribution-tool
+printf '%s' "github_pat_..." > ~/.config/contribution-tool/token
+chmod 600 ~/.config/contribution-tool/token
+```
+
+On Windows the file is `%APPDATA%\contribution-tool\token`. For a single run you can
+instead set `CONTRIBUTION_TOOL_TOKEN`, which wins over the file. The tool does not use
+`GITHUB_TOKEN`, because git and gh also use it.
 
 ## Privacy
 

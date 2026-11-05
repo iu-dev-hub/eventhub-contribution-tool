@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import json
 import os
+import stat
+import sys
 import urllib.request
 from collections.abc import Callable, Mapping
+from pathlib import Path
 from typing import Any
 
 API_URL = "https://api.github.com/graphql"
@@ -69,15 +72,47 @@ query($id: ID!, $cursor: String) {
 """
 
 
-def get_token(environ: Mapping[str, str] = os.environ) -> str:
-    """Read the GitHub token from the environment, never from code (REQ-6.2)."""
+def default_token_file(environ: Mapping[str, str] = os.environ, os_name: str = os.name) -> Path:
+    """Where the token file lives: outside the repository, in the user's config folder."""
+    if os_name == "nt":
+        return Path(environ.get("APPDATA", Path.home())) / "contribution-tool" / "token"
+    config = environ.get("XDG_CONFIG_HOME") or Path.home() / ".config"
+    return Path(config) / "contribution-tool" / "token"
+
+
+def _warn(message: str) -> None:
+    print(f"Warning: {message}", file=sys.stderr)
+
+
+def get_token(
+    environ: Mapping[str, str] = os.environ,
+    token_file: Path | None = None,
+    warn: Callable[[str], None] = _warn,
+) -> str:
+    """Read the GitHub token from the environment or from a file outside the repository.
+
+    The environment variable wins over the file (REQ-6.2).
+    """
     token = environ.get(TOKEN_VARIABLE, "").strip()
-    if not token:
-        raise RuntimeError(
-            f"{TOKEN_VARIABLE} is not set. Create a read-only token on GitHub and run:\n"
-            f'  export {TOKEN_VARIABLE}="..."'
-        )
-    return token
+    if token:
+        return token
+
+    path = token_file or default_token_file()
+    if path.exists():
+        if os.name != "nt" and stat.S_IMODE(path.stat().st_mode) & 0o077:
+            warn(f"{path} can be read by other users; run: chmod 600 {path}")
+        token = path.read_text(encoding="utf-8").strip()
+        if token:
+            return token
+        raise RuntimeError(f"Token file {path} is empty")
+
+    raise RuntimeError(
+        f"No GitHub token found. Create a read-only token on GitHub and save it in {path}:\n"
+        f"  mkdir -p {path.parent}\n"
+        f"  printf '%s' 'github_pat_...' > {path}\n"
+        f"  chmod 600 {path}\n"
+        f"or set {TOKEN_VARIABLE} for a single run."
+    )
 
 
 def graphql_request(token: str) -> Request:

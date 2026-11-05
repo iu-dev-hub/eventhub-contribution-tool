@@ -100,8 +100,12 @@ def test_unlinked_accounts_are_shown(fake_github, students_csv, capsys):
 # Errors stop the tool with a message and exit code 1
 
 
-def test_missing_token_stops_with_message(monkeypatch, students_csv, capsys):
+def test_missing_token_stops_with_message(monkeypatch, students_csv, tmp_path, capsys):
     monkeypatch.delenv("CONTRIBUTION_TOOL_TOKEN", raising=False)
+    # do not use a real token file on this computer
+    monkeypatch.setattr(
+        "contribution_tool.github_api.default_token_file", lambda: tmp_path / "token"
+    )
     assert cli.main(["--students", str(students_csv)]) == 1
     assert "CONTRIBUTION_TOOL_TOKEN" in capsys.readouterr().err
 
