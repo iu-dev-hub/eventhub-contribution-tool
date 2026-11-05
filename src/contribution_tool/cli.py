@@ -47,7 +47,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--factor", type=float, default=DEFAULT_TARGET_FACTOR, help="role target factor"
     )
     parser.add_argument("--adjustments", type=Path, help="instructor adjustments CSV")
-        parser.add_argument(
+    parser.add_argument(
         "--no-taiga-history",
         action="store_true",
         help="use only the Taiga CSV exports, without logging in to Taiga",
