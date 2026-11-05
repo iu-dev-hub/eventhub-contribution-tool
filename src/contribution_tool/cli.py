@@ -104,5 +104,49 @@ def _taiga_history(
     return collect_history(story_histories, other_histories, start, end)
 
 
+def format_report(report: Report) -> str:
+    """Plain text summary for the terminal."""
+    width = max([len("Student")] + [len(r.name) for r in report.students])
+    lines = [
+        f"{'Student':<{width}}  {'Role':<13}  {'Grade':>9}  {'Adj':>4}  {'Final':>5}"
+        f"  {'Score':>6}  Accounts"
+    ]
+    for r in report.students:
+        grade = "UNMATCHED" if r.unmatched else str(r.grade)
+        adjustment = f"{r.adjustment:+d}" if r.adjustment else ""
+        final = "-" if r.final is None else str(r.final)
+        accounts = ", ".join(r.accounts) or "-"
+        lines.append(
+            f"{r.name:<{width}}  {r.role:<13}  {grade:>9}  {adjustment:>4}  {final:>5}"
+            f"  {r.score:>6.1f}  {accounts}"
+        )
+
+    adjusted = [r for r in report.students if r.reasons]
+    if adjusted:
+        lines += ["", "Adjustments:"]
+        lines += [f"  - {r.name} {reason}" for r in adjusted for reason in r.reasons]
+    if report.targets:
+        lines += ["", "Role targets:"]
+        lines += [f"  {role}: {target:.1f}" for role, target in sorted(report.targets.items())]
+    if report.warnings:
+        lines += ["", "Warnings:"]
+        lines += [f"  - {warning}" for warning in report.warnings]
+    if report.unlinked:
+        lines += ["", "Active accounts not linked to any student:"]
+        lines += [f"  - {account}" for account in report.unlinked]
+    return "\n".join(lines)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    try:
+        report = run(args)
+    except (ValueError, RuntimeError, OSError) as error:
+        print(f"Error: {error}", file=sys.stderr)
+        return 1
+    print(format_report(report))
+    return 0
+
+
 if __name__ == "__main__":
     sys.exit(main())
