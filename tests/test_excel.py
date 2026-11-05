@@ -37,7 +37,13 @@ def rows(sheet, start):
 
 def test_workbook_has_all_sheets(tmp_path):
     book = load_workbook(write_excel(REPORT, tmp_path / "out.xlsx"))
-    assert book.sheetnames == ["Grades", "Warnings", "Adjustments", "Unlinked accounts"]
+    assert book.sheetnames == [
+        "Grades",
+        "Guidance",
+        "Warnings",
+        "Adjustments",
+        "Unlinked accounts",
+    ]
 
 
 def test_grades_sheet_shows_grade_adjustment_final_and_counts(tmp_path):
@@ -79,3 +85,15 @@ def test_title_is_written(tmp_path):
 def test_missing_folder_is_created(tmp_path):
     path = write_excel(REPORT, tmp_path / "data" / "reports" / "out.xlsx")
     assert path.exists()
+
+
+# REQ-4 — Guidance sheet
+
+
+def test_guidance_sheet_has_focus_for_matched_students_only(tmp_path):
+    sheet = load_workbook(write_excel(REPORT, tmp_path / "out.xlsx"))["Guidance"]
+    header = rows(sheet, 3)[0]
+    students = rows(sheet, 4)
+    assert [row[0] for row in students] == ["Test Öğrenci Bir"]
+    assert header[-1] == "Focus"
+    assert students[0][-1]
