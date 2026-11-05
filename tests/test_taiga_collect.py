@@ -4,7 +4,7 @@ from datetime import date
 
 import pytest
 
-from contribution_tool.taiga import collect_taiga, load_csv
+from contribution_tool.taiga import TaigaData, collect_taiga, load_csv, merge_taiga
 
 
 def row(**values):
@@ -145,3 +145,21 @@ def test_load_csv_from_url(monkeypatch):
 
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
     assert load_csv("https://example.org/issues.csv") == [{"owner": "ogrencibir", "status": "Yeni"}]
+
+
+# CSV data and history data are combined
+
+
+def test_merge_adds_up_counts():
+    csv_data = collect(stories=[row(owner="ogrencibir")])
+    history = TaigaData()
+    history.counts["ogrencibir"]["stories_accepted"] += 2
+    merged = merge_taiga(csv_data, history)
+    assert merged.counts["ogrencibir"] == {"stories_written": 1, "stories_accepted": 2}
+
+
+def test_merge_keeps_full_names_from_either_source():
+    csv_data = collect(stories=[row(owner="ogrencibir")])  # no full name in the CSV
+    history = TaigaData(users={"ogrencibir": "Test Öğrenci Bir", "ogrencibes": "Test Öğrenci Beş"})
+    merged = merge_taiga(csv_data, history)
+    assert merged.users == {"ogrencibir": "Test Öğrenci Bir", "ogrencibes": "Test Öğrenci Beş"}

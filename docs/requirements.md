@@ -1,6 +1,6 @@
 # Gereksinimler — EventHub Katkı Aracı
 
-Sürüm: 1.8 · Kapsam: v1 (nicel değerlendirme)
+Sürüm: 1.9 · Kapsam: v1 (nicel değerlendirme)
 
 Bu doküman, aracın ne yapması gerektiğini tanımlar. Her gereksinim test edilebilir
 yazılmıştır ve bir kimlik numarası (REQ-x.y) taşır. Testler bu numaralara atıf yapar.
@@ -115,7 +115,11 @@ medyanıyla birlikte tek cümle olarak yazar.
 **REQ-5.2** Her sayı, dayandığı kayda (PR veya Taiga kaydı) çıktıdan bağlantısıyla
 izlenebilir.
 
-**REQ-5.3** Araç tek bir komutla çalıştırılır. Öğrenci listesi, Taiga CSV klasörü (isteğe bağlı), depo, tarih aralığı, rol sütunu ve hedef katsayısı komutta verilir. Her öğrencinin rolü, notu, puanı ve hesapları, uyarılar ve hiçbir öğrenciye bağlanamayan hesaplar ekrana yazılır.
+**REQ-5.3** Araç tek bir komutla çalıştırılır. Öğrenci listesi, Taiga CSV klasörü
+(isteğe bağlı), depo, tarih aralığı, rol sütunu ve hedef katsayısı komutta verilir.
+Her öğrencinin rolü, notu, puanı ve hesapları, uyarılar ve hiçbir öğrenciye bağlanamayan
+hesaplar ekrana yazılır. Taiga klasörü verildiğinde değişiklik geçmişi de indirilir ve
+CSV verisiyle birleştirilir; bu adım bir seçenekle atlanabilir.
 
 ## 6. Gizlilik ve güvenlik
 
@@ -149,3 +153,5 @@ sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 | 1.6 | REQ-2.4: kısmi eşleşmede uyarı | Kabul testinde, Taiga kullanıcı adı listedekinden farklı olan bir öğrencinin Taiga katkıları sayılmadı ve uyarı verilmedi |
 | 1.7 | REQ-1.8 ve REQ-1.9 eklendi: Taiga değişiklik geçmişinden hikâye kabulü ve yorum sayımı | Taiga CSV'si durumu kimin değiştirdiğini içermiyor; testçi ve PO işleri görünmüyordu |
 | 1.8 | REQ-1.7 ve REQ-6.4 eklendi: Taiga geçmişinin indirilmesi ve Taiga girişi | Taiga projesi özel; geçmişi okumak için öğretim üyesinin hesabıyla giriş gerekiyor |
+| 1.9 | REQ-5.3: Taiga değişiklik geçmişi komuta bağlandı | Testçi ve PO işlerinin nota yansıması |
+

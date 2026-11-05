@@ -36,6 +36,24 @@ def fake_github(monkeypatch):
 
 
 @pytest.fixture
+def fake_taiga(monkeypatch):
+    """Taiga login and history download replaced by fakes; returns the fake request."""
+    asked = []
+    histories = {}
+
+    def fake_send(path):
+        asked.append(path)
+        return histories.get(path, [])
+
+    monkeypatch.setattr(cli, "get_credentials", lambda: ("hoca", "gizli"))
+    monkeypatch.setattr(cli, "login", lambda username, password: "test-token")
+    monkeypatch.setattr(cli, "taiga_request", lambda token: fake_send)
+    fake_send.histories = histories
+    fake_send.asked = asked
+    return fake_send
+
+
+@pytest.fixture
 def students_csv(tmp_path):
     path = tmp_path / "ogrenciler.csv"
     path.write_text(STUDENTS, encoding="utf-8")
@@ -52,7 +70,7 @@ def write_taiga(folder, files=cli.TAIGA_FILES):
 # REQ-5.3 — One command runs the whole tool and prints a summary
 
 
-def test_full_run_prints_grades(fake_github, students_csv, tmp_path, capsys):
+def test_full_run_prints_grades(fake_github, fake_taiga, students_csv, tmp_path, capsys):
     taiga = write_taiga(tmp_path / "taiga")
     code = cli.main(["--students", str(students_csv), "--taiga", str(taiga), "--role", "rol_d1"])
     output = capsys.readouterr().out
@@ -88,7 +106,9 @@ def test_missing_token_stops_with_message(monkeypatch, students_csv, capsys):
     assert "CONTRIBUTION_TOOL_TOKEN" in capsys.readouterr().err
 
 
-def test_missing_taiga_file_stops_with_message(fake_github, students_csv, tmp_path, capsys):
+def test_missing_taiga_file_stops_with_message(
+    fake_github, fake_taiga, students_csv, tmp_path, capsys
+):
     taiga = write_taiga(tmp_path / "taiga", files=("userstories.csv", "tasks.csv"))
     assert cli.main(["--students", str(students_csv), "--taiga", str(taiga)]) == 1
     assert "issues.csv" in capsys.readouterr().err
@@ -126,3 +146,55 @@ def test_adjustments_are_shown_with_reason(fake_github, students_csv, tmp_path, 
     )
     assert cli.main(["--students", str(students_csv), "--adjustments", str(adjustments)]) == 0
     assert "Test Öğrenci Bir +10: Backlog SM tarafından açıldı" in capsys.readouterr().out
+
+
+# REQ-1.7 to REQ-1.9 — Taiga history is downloaded and counted when a Taiga folder is given
+
+STORY_HEADER = "id,ref,owner,assigned_to,status,is_closed,created_date,finished_date\n"
+
+
+def test_taiga_history_links_a_student_with_no_other_activity(
+    fake_github, fake_taiga, students_csv, tmp_path, capsys
+):
+    # Test Öğrenci Üç has no pull request and owns no Taiga item; only the history shows
+    # that they moved a story to Done (the tester case from the acceptance test)
+    taiga = write_taiga(tmp_path / "taiga")
+    (taiga / "userstories.csv").write_text(
+        STORY_HEADER + "7,103,,,Done,True,2026-10-01,2026-10-31\n", encoding="utf-8"
+    )
+    fake_taiga.histories["/history/userstory/7"] = [
+        {
+            "user": {"username": "ogrenciuc", "name": "Test Öğrenci Üç"},
+            "created_at": "2026-10-31T16:50:51Z",
+            "values_diff": {"status": ["Ready for test", "Done"]},
+            "comment": "",
+        }
+    ]
+    assert cli.main(["--students", str(students_csv), "--taiga", str(taiga)]) == 0
+    captured = capsys.readouterr()
+    assert fake_taiga.asked == ["/history/userstory/7"]
+    assert "UNMATCHED" not in captured.out
+    assert "Downloading Taiga history for 1 items" in captured.err
+
+
+def test_no_taiga_history_option_skips_login(fake_github, students_csv, tmp_path, monkeypatch):
+    def must_not_log_in():
+        raise AssertionError("Taiga login should be skipped")
+
+    monkeypatch.setattr(cli, "get_credentials", must_not_log_in)
+    taiga = write_taiga(tmp_path / "taiga")
+    args = ["--students", str(students_csv), "--taiga", str(taiga), "--no-taiga-history"]
+    assert cli.main(args) == 0
+
+
+def test_taiga_login_error_stops_with_message(
+    fake_github, students_csv, tmp_path, monkeypatch, capsys
+):
+    def wrong_password(username, password):
+        raise RuntimeError("Taiga login failed (401): check the username and password")
+
+    monkeypatch.setattr(cli, "get_credentials", lambda: ("hoca", "yanlis"))
+    monkeypatch.setattr(cli, "login", wrong_password)
+    taiga = write_taiga(tmp_path / "taiga")
+    assert cli.main(["--students", str(students_csv), "--taiga", str(taiga)]) == 1
+    assert "Taiga login failed" in capsys.readouterr().err

@@ -31,6 +31,8 @@ METRICS = (
     "tasks_closed",
     "bugs_reported",
     "bugs_fixed",
+    "stories_accepted",
+    "taiga_comments",
 )
 
 # fmt: off
@@ -46,6 +48,8 @@ _WEIGHT_TABLE = {
     "tasks_closed":     (0.5, 1.0, 1.0, 1.0, 1.0, 1.0),
     "bugs_reported":    (1.0, 0.5, 1.0, 1.0, 3.0, 2.0),
     "bugs_fixed":       (0.5, 0.5, 2.0, 2.0, 1.0, 1.0),
+        "stories_accepted": (3.0, 1.0, 0.5, 0.5, 3.0, 1.0),
+    "taiga_comments":   (0.5, 0.5, 0.25, 0.25, 0.5, 0.25),
 }
 # fmt: on
 

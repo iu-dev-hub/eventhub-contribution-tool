@@ -115,3 +115,45 @@ def test_single_student_role_warning_is_in_report():
     student = Student(name="Test Öğrenci Bir", role="Front", usernames=("bir",))
     report = build_report([student], github_data({"bir": {"pr_opened": 1}}), taiga_data())
     assert any("'Front'" in w for w in report.warnings)
+
+
+# REQ-2.4 — Partially matched students get a warning
+# Source: acceptance test, a student's Taiga account was not linked and no warning was shown
+
+
+def test_student_without_taiga_account_gets_a_warning():
+    student = Student(name="Test Öğrenci Bir", role="Back", usernames=("bir",))
+    github = github_data({"bir": {"pr_merged": 1}})
+    taiga = taiga_data({"ugurlu": {"tasks_closed": 4}}, {"ugurlu": "Farklı Ad"})
+    report = build_report([student], github, taiga)
+    assert any("Test Öğrenci Bir: no Taiga account" in w for w in report.warnings)
+    assert "ugurlu" in report.unlinked
+
+
+def test_student_without_github_account_gets_a_warning():
+    student = Student(name="Test Öğrenci Bir", role="PO", usernames=("bir",))
+    taiga = taiga_data({"bir": {"stories_written": 2}}, {"bir": ""})
+    report = build_report([student], github_data({"baska": {"pr_opened": 1}}), taiga)
+    assert any("Test Öğrenci Bir: no GitHub account" in w for w in report.warnings)
+
+
+def test_no_partial_warning_when_linked_to_both():
+    student = Student(name="Test Öğrenci Bir", role="Back", usernames=("bir",))
+    github = github_data({"bir": {"pr_merged": 1}})
+    taiga = taiga_data({"bir": {"tasks_closed": 1}}, {"bir": ""})
+    report = build_report([student], github, taiga)
+    assert not any("account found" in w for w in report.warnings)
+
+
+def test_no_taiga_warning_when_no_taiga_data_is_given():
+    student = Student(name="Test Öğrenci Bir", role="Back", usernames=("bir",))
+    report = build_report([student], github_data({"bir": {"pr_merged": 1}}), taiga_data())
+    assert not any("Taiga account" in w for w in report.warnings)
+
+
+def test_unmatched_student_gets_only_the_unmatched_warning():
+    student = Student(name="Test Öğrenci Üç", role="Back", emails=("uc@example.org",))
+    taiga = taiga_data({"baska": {"tasks_closed": 1}}, {"baska": ""})
+    report = build_report([student], github_data({"x": {"pr_opened": 1}}), taiga)
+    student_warnings = [w for w in report.warnings if w.startswith("Test Öğrenci Üç")]
+    assert student_warnings == ["Test Öğrenci Üç: not matched to any GitHub or Taiga account"]

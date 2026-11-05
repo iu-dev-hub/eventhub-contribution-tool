@@ -27,6 +27,13 @@ def test_same_counts_give_different_scores_for_different_roles():
     assert score(counts, "Testçi") > score(counts, "Back")
 
 
+def test_accepted_stories_count_more_for_testers_and_product_owners():
+    # Source: acceptance test, testers' and product owners' work is moving stories to Done
+    counts = {"stories_accepted": 2}
+    assert score(counts, "Testçi") > score(counts, "Back")
+    assert score(counts, "Product Owner") > score(counts, "Front")
+
+
 def test_missing_metrics_count_as_zero():
     assert score({}, "Back") == 0
 

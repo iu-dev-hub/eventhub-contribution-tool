@@ -111,3 +111,14 @@ def _remember_users(data: TaigaData, row: Row) -> None:
             # keep the account even without a full name, so it can match by username
             full_name = row.get(name_column) or data.users.get(username, "")
             data.users[username] = full_name
+
+
+def merge_taiga(*parts: TaigaData) -> TaigaData:
+    """Combine Taiga data from the CSV export and from the change history."""
+    merged = TaigaData()
+    for part in parts:
+        for user, counts in part.counts.items():
+            merged.counts[user].update(counts)
+        for user, full_name in part.users.items():
+            merged.users[user] = full_name or merged.users.get(user, "")
+    return merged
