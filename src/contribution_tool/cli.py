@@ -8,6 +8,7 @@ from datetime import date
 from pathlib import Path
 
 from contribution_tool.adjustments import load_adjustments
+from contribution_tool.excel import write_excel
 from contribution_tool.github import collect_github
 from contribution_tool.github_api import (
     fetch_discussions,
@@ -47,6 +48,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--factor", type=float, default=DEFAULT_TARGET_FACTOR, help="role target factor"
     )
     parser.add_argument("--adjustments", type=Path, help="instructor adjustments CSV")
+    parser.add_argument("--excel", type=Path, help="also save the report to this Excel file")
     parser.add_argument(
         "--no-taiga-history",
         action="store_true",
@@ -145,6 +147,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Error: {error}", file=sys.stderr)
         return 1
     print(format_report(report))
+    if args.excel:
+        period = f"{args.start or 'start'} – {args.end or 'today'}"
+        title = f"{args.repo} · {period} · {args.role or 'role'}"
+        print(f"Saved: {write_excel(report, args.excel, title)}", file=sys.stderr)
     return 0
 
 

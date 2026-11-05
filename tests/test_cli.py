@@ -202,3 +202,13 @@ def test_taiga_login_error_stops_with_message(
     taiga = write_taiga(tmp_path / "taiga")
     assert cli.main(["--students", str(students_csv), "--taiga", str(taiga)]) == 1
     assert "Taiga login failed" in capsys.readouterr().err
+
+
+# REQ-5.1 — The report can also be saved to Excel
+
+
+def test_excel_option_saves_the_report(fake_github, students_csv, tmp_path, capsys):
+    path = tmp_path / "rapor.xlsx"
+    assert cli.main(["--students", str(students_csv), "--excel", str(path)]) == 0
+    assert path.exists()
+    assert "Saved:" in capsys.readouterr().err
