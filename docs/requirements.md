@@ -195,6 +195,12 @@ en düşük maddeler raporlanır (farklar).
 hesaplanır ve gösterilir. Uyuşma oranı belirlenen eşiğin altındaysa raporlar
 üretilmez.
 
+**REQ-7.11** Kalibrasyonda eşiği geçen en az üç model birlikte kullanılabilir: her
+madde için modellerin çoğunluğunun cevabı geçerlidir. Çoğunluk yoksa madde "belirsiz"
+sayılır; öğrencinin oranlarına girmez, öğretim üyesine gösterilir. Modeller birer birer
+bütün katkılar üzerinde çalıştırılır ve cevapları saklanır; oylama saklanan cevaplardan
+yapılır.
+
 ## Kapsam dışı (v1)
 
 - **Ağırlıkların Excel'de değiştirilmesi** (eski REQ-3.1). Excel formülleri karmaşık ve
