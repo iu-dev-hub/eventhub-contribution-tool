@@ -99,6 +99,7 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-1.7 | Denklik sınıfı | `tests/test_taiga_api.py` |
 | REQ-1.8 | Denklik sınıfı, sınır değer | `tests/test_taiga_history.py` |
 | REQ-1.9 | Denklik sınıfı | `tests/test_taiga_history.py` |
+| REQ-1.10 | Durum geçişi, hata tahmini | `tests/test_taiga_cache.py`, `tests/test_cli.py` |
 | REQ-2.1 | Denklik sınıfı | `tests/test_students.py` |
 | REQ-2.2 | Denklik sınıfı | `tests/test_matching.py` |
 | REQ-2.3 | Denklik sınıfı, hata tahmini | `tests/test_matching.py` |

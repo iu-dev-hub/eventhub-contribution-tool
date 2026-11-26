@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import sys
 from datetime import date
 from pathlib import Path
@@ -27,17 +28,13 @@ from contribution_tool.taiga import (
     load_exports_from_config,
     merge_taiga,
 )
-from contribution_tool.taiga_api import (
-    fetch_histories,
-    get_credentials,
-    ids_from_rows,
-    login,
-    taiga_request,
-)
+from contribution_tool.taiga_api import get_credentials, login, taiga_request
+from contribution_tool.taiga_cache import DEFAULT_HISTORY_DIR, HistoryCache, cached_histories
 from contribution_tool.taiga_history import collect_history
 
 DEFAULT_REPO = "iu-dev-hub/eventhub"
 TAIGA_FILES = ("userstories.csv", "tasks.csv", "issues.csv")
+TAIGA_HISTORY_DIR = DEFAULT_HISTORY_DIR
 
 
 def taiga_links_file() -> Path:
@@ -132,13 +129,22 @@ def _taiga_history(
     start: date | None,
     end: date | None,
 ) -> TaigaData:
-    """Log in to Taiga and count work from the change history (REQ-1.7 to REQ-1.9)."""
-    send = taiga_request(login(*get_credentials()))
+    """Count work from the change history (REQ-1.7 to REQ-1.10).
+
+    Histories of unchanged items are read from the saved copy; Taiga is logged in to only
+    when something must be downloaded.
+    """
+    cache = HistoryCache(TAIGA_HISTORY_DIR)
+    connect = functools.cache(lambda: taiga_request(login(*get_credentials())))
     total = len(stories) + len(tasks) + len(issues)
     print(f"Downloading Taiga history for {total} items...", file=sys.stderr)
-    story_histories = fetch_histories("userstory", ids_from_rows(stories), send)
-    other_histories = fetch_histories("task", ids_from_rows(tasks), send)
-    other_histories += fetch_histories("issue", ids_from_rows(issues), send)
+    story_histories = cached_histories("userstory", stories, cache, connect)
+    other_histories = cached_histories("task", tasks, cache, connect)
+    other_histories += cached_histories("issue", issues, cache, connect)
+    print(
+        f"Taiga history: {cache.downloaded} downloaded, {cache.reused} from the saved copy",
+        file=sys.stderr,
+    )
     return collect_history(story_histories, other_histories, start, end)
 
 
