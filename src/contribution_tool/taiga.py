@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import io
+import tomllib
 import urllib.request
 from collections import Counter, defaultdict
 from collections.abc import Iterable, Mapping
@@ -29,6 +30,9 @@ class TaigaData:
     evidence: list[Evidence] = field(default_factory=list)  # REQ-7.1
 
 
+EXPORT_NAMES = ("userstories", "tasks", "issues")
+
+
 def load_csv(source: str | Path) -> list[dict[str, str]]:
     """Read a Taiga CSV export from a file path or a URL (REQ-1.2)."""
     text = str(source)
@@ -42,6 +46,23 @@ def load_csv(source: str | Path) -> list[dict[str, str]]:
         {key.strip().lower(): (value or "").strip() for key, value in row.items() if key}
         for row in reader
     ]
+
+
+def load_exports_from_config(path: Path) -> list[list[dict[str, str]]]:
+    """Read the three exports from the links saved in a config file (REQ-1.2, REQ-6.5)."""
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Taiga export links not found. Create {path} with the links from "
+            "Taiga → Settings → Project → Reports:\n"
+            '  userstories = "https://api.taiga.io/api/v1/userstories/csv?uuid=..."\n'
+            '  tasks = "https://api.taiga.io/api/v1/tasks/csv?uuid=..."\n'
+            '  issues = "https://api.taiga.io/api/v1/issues/csv?uuid=..."'
+        )
+    links = tomllib.loads(path.read_text(encoding="utf-8"))
+    missing = [name for name in EXPORT_NAMES if not str(links.get(name, "")).strip()]
+    if missing:
+        raise ValueError(f"{path} is missing links for: {', '.join(missing)}")
+    return [load_csv(links[name].strip()) for name in EXPORT_NAMES]
 
 
 def collect_taiga(

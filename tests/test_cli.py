@@ -212,3 +212,24 @@ def test_excel_option_saves_the_report(fake_github, students_csv, tmp_path, caps
     assert cli.main(["--students", str(students_csv), "--excel", str(path)]) == 0
     assert path.exists()
     assert "Saved:" in capsys.readouterr().err
+
+
+# REQ-1.2 — Taiga exports from saved links
+
+
+def test_taiga_online_reads_the_saved_links(fake_github, fake_taiga, students_csv, monkeypatch):
+    used = []
+
+    def fake_load(path):
+        used.append(path.name)
+        return [[], [], []]
+
+    monkeypatch.setattr(cli, "load_exports_from_config", fake_load)
+    assert cli.main(["--students", str(students_csv), "--taiga-online"]) == 0
+    assert used == ["taiga-links.toml"]
+
+
+def test_taiga_folder_and_online_cannot_be_used_together(students_csv, tmp_path):
+    with pytest.raises(SystemExit) as error:
+        cli.main(["--students", str(students_csv), "--taiga", str(tmp_path), "--taiga-online"])
+    assert error.value.code == 2
