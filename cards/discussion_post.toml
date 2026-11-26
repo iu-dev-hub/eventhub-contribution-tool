@@ -1,0 +1,38 @@
+kind = "discussion_post"
+title = "Discussions yazısı"
+
+[[items]]
+id = "post.done"
+question = "Günlük yazısıysa: son yazıdan bu yana yapılan iş somut olarak yazılmış mı? (Günlük değilse uygulanamaz.)"
+source = "eventhub CONTRIBUTING.md §8"
+tip = "Günlükte 'çalıştım' değil, ne yaptığını yaz: 'TG-42 için kontenjan kontrolünü bitirdim, PR #15 açık.'"
+
+[[items]]
+id = "post.next"
+question = "Günlük yazısıysa: sıradaki iş yazılmış mı? (Günlük değilse uygulanamaz.)"
+source = "eventhub CONTRIBUTING.md §8"
+tip = "Şimdi ne yapacağını yaz; ekip arkadaşların kiminle çakışacaklarını ve kimden ne bekleyeceklerini bilir."
+
+[[items]]
+id = "post.blocker"
+question = "Günlük yazısıysa: bir engel olup olmadığı belirtilmiş mi ('engel yok' da geçerli)? (Günlük değilse uygulanamaz.)"
+source = "eventhub CONTRIBUTING.md §8"
+tip = "Engel varsa açıkça yaz, yoksa 'engel yok' de. Scrum Master engele 24 saat içinde ancak böyle yanıt verebilir."
+
+[[items]]
+id = "post.traceable"
+question = "Bahsedilen işler PR veya TG numarasıyla izlenebilir mi?"
+source = "eventhub CONTRIBUTING.md §3"
+tip = "İşlerin yanına PR veya TG numarasını ekle; okuyan kişi ayrıntıya tek tıkla ulaşır."
+
+[[items]]
+id = "post.decision"
+question = "Bir karar veya ekipler arası bağımlılık içeriyorsa, sorumlusu ve tarihi yazılmış mı? (Karar veya bağımlılık yoksa uygulanamaz.)"
+source = "eventhub docs/guides/scrum-master.md §6"
+tip = "Kararları sorumlusu ve tarihiyle yaz (ör. 'get_event → Sprint 3 sonuna kadar, sorumlu: team-events'). Yazılmayan karar alınmamış sayılır."
+
+[[items]]
+id = "post.question"
+question = "Bir soruysa: ne denendiği, hata mesajı (metin olarak) ve tahmin yazılmış mı? (Soru değilse uygulanamaz.)"
+source = "eventhub docs/guides/communication.md §2"
+tip = "Soru sorarken ne yapmaya çalıştığını, ne olduğunu, ne denediğini ve tahminini yaz; hata mesajını ekran görüntüsü değil metin olarak ekle."

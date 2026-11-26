@@ -1,0 +1,32 @@
+kind = "taiga_comment"
+title = "Taiga yorumu"
+
+[[items]]
+id = "comment.specific"
+question = "Yorum somut bir bilgi (karar, test sonucu, kriter numarası, cevap) içeriyor mu?"
+source = "eventhub docs/guides/communication.md §1"
+tip = "Yorumda somut bilgi ver: kararı, sonucu veya cevabı. İş ile ilgili bilgi işin yanında durduğunda kaybolmaz."
+
+[[items]]
+id = "comment.acceptance"
+question = "Bir kabul veya ret ise, hangi kriterlerin sağlandığı veya sağlanmadığı yazılmış mı? (Kabul veya ret değilse uygulanamaz.)"
+source = "eventhub docs/guides/product-owner.md §7"
+tip = "Kabul ederken 'Kabul: 4 kriterin 4'ü sağlandı', reddederken 'Kriter 2: mesaj farklı metinle gösteriliyor' gibi kriter numarasıyla yaz."
+
+[[items]]
+id = "comment.test_result"
+question = "Bir test sonucu ise, hangi testlerin çalıştığı ve sonuçları yazılmış mı? (Test sonucu değilse uygulanamaz.)"
+source = "eventhub docs/guides/qa-engineer.md §4"
+tip = "Test sonucunu test durumu numaralarıyla yaz (ör. 'TC-42-01 ve TC-42-02 geçti, TC-42-03 başarısız: #57')."
+
+[[items]]
+id = "comment.traceable"
+question = "Yorum BR, PR, TG veya test durumu numarasıyla izlenebilir mi?"
+source = "eventhub docs/guides/qa-engineer.md §5"
+tip = "İlgili BR, PR veya test durumu numarasını ekle; yorumu okuyan kişi kaynağa doğrudan ulaşır."
+
+[[items]]
+id = "comment.objective"
+question = "Yorum kişiye değil, işe ve gözlenen davranışa mı odaklı?"
+source = "eventhub docs/guides/communication.md §5"
+tip = "İşe ve davranışa odaklan: 'Bu PR'da test yok' de, 'Sen hiç test yazmıyorsun' deme."

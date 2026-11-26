@@ -16,10 +16,13 @@ leave the instructor's computer.
 3. **Small questions.** A local model (Ollama) reviews one contribution against one
    card and answers each item with met / not met / not applicable, as JSON. The
    contribution text is limited to 2,000 characters, so a 4,096-token context is enough.
-4. **Cache.** Results are stored by content hash, card version and model name.
-5. **Reports in code, not in the model.** Gaps, progress and tips are calculated in
+4. **Empty texts are handled in code.** A contribution without text (e.g. an approval
+   without a comment, 80 of 195 reviews in the first data) is not sent to the model;
+   every item of its card is marked as not met.
+5. **Cache.** Results are stored by content hash, card version and model name.
+6. **Reports in code, not in the model.** Gaps, progress and tips are calculated in
    Python from the item results. Tips come from the cards, not from the model.
-6. **Calibration.** The instructor labels 20–30 contributions by hand. The model is
+7. **Calibration.** The instructor labels 20–30 contributions by hand. The model is
    used only if its agreement with the instructor is above the threshold.
 
 ## Why small questions

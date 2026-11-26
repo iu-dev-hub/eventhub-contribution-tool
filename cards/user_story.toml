@@ -1,0 +1,51 @@
+kind = "user_story"
+title = "Kullanıcı hikâyesi"
+
+[[items]]
+id = "story.format"
+question = "Hikâye 'Bir <rol> olarak, <istek> istiyorum, böylece <fayda>' biçiminde yazılmış mı?"
+source = "eventhub docs/guides/product-owner.md §4"
+tip = "Hikâyeyi 'Bir … olarak, … istiyorum, böylece …' biçiminde yaz; rol, istek ve fayda birlikte görünsün."
+
+[[items]]
+id = "story.not_task"
+question = "Bu bir teknik görev (ör. 'tablo ekle') değil, kullanıcıya fayda anlatan bir hikâye mi?"
+source = "eventhub docs/guides/product-owner.md §4, §10"
+tip = "'Veritabanına tablo ekle' bir görevdir, hikâye değil. Hikâye kullanıcının ne yapabileceğini anlatır; teknik işler altına görev olarak eklenir."
+
+[[items]]
+id = "story.criteria"
+question = "Kabul kriterleri Given / When / Then biçiminde yazılmış mı?"
+source = "eventhub docs/guides/product-owner.md §4"
+tip = "Kabul kriterlerini 'Given … When … Then …' biçiminde yaz; testçi testlerini doğrudan bunlardan çıkarır."
+
+[[items]]
+id = "story.testable"
+question = "Kabul kriterleri somut ve test edilebilir mi ('doğru çalışmalı', 'kolay olmalı' gibi belirsiz ifadeler yok)?"
+source = "eventhub docs/guides/product-owner.md §4, §10"
+tip = "Belirsiz ifadeler yerine ölçülebilir sonuç yaz: 'kolay olmalı' değil, 'en fazla 2 tıklamayla bilet alır'."
+
+[[items]]
+id = "story.edge_cases"
+question = "En az bir kabul kriteri hata veya sınır durumunu (ör. kontenjan dolu, süre geçmiş, giriş yapılmamış) ele alıyor mu?"
+source = "eventhub docs/guides/product-owner.md §9"
+tip = "Yalnızca başarılı yolu değil, hata ve sınır durumlarını da kritere ekle; hatalar en çok orada çıkar."
+
+[[items]]
+id = "story.rules"
+question = "İlgili iş kuralları (BR-x.y) belirtilmiş mi?"
+source = "eventhub docs/guides/product-owner.md §5"
+tip = "Hikâyenin dayandığı iş kurallarını (BR-x.y) yaz; geliştirici ve testçi aynı kaynağa bakar."
+
+[[items]]
+id = "story.dependencies"
+question = "Bağımlılıklar yazılmış mı (bağımlılık yoksa bu belirtilmiş mi)?"
+source = "eventhub docs/guides/product-owner.md §5"
+tip = "Başka bir ekibin işine bağlıysa bağımlılığı numarasıyla yaz (ör. '#17, team-events get_event'); yoksa 'Bağımlılık yok' yaz."
+
+[[items]]
+id = "story.small"
+question = "Hikâye tek bir rolü ve tek bir işlemi mi kapsıyor (bölünmesi gerekmiyor)?"
+source = "eventhub docs/guides/product-owner.md §4; INVEST"
+tip = "Birden fazla rol veya işlem içeren hikâyeyi böl (ör. 'bilet al' ve 'bileti iptal et' ayrı hikâyeler). Küçük hikâye bir sprintte biter ve kolay test edilir."
+industry = true

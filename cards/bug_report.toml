@@ -1,0 +1,45 @@
+kind = "bug_report"
+title = "Hata kaydı"
+
+[[items]]
+id = "bug.link"
+question = "İlgili kullanıcı hikâyesi veya iş kuralı (BR-x.y) belirtilmiş mi?"
+source = "eventhub docs/bug-report-template.md"
+tip = "Hatanın hangi hikâye ve hangi iş kuralıyla ilgili olduğunu yaz; geliştirici neyin beklendiğini kuraldan okur."
+
+[[items]]
+id = "bug.environment"
+question = "Ortam (tarayıcı, dal, commit) ve ön koşullar (kullanıcı rolü, test verisi) yazılmış mı?"
+source = "eventhub docs/bug-report-template.md; ISTQB CTFL 4.0 §5.5"
+tip = "Ortamı ve ön koşulları yaz (ör. 'Chrome 130, main, commit a1b2c3d; organizatör rolü, kapasitesi 100 olan etkinlik'). Hata çoğu zaman yalnızca belirli koşullarda çıkar."
+industry = true
+
+[[items]]
+id = "bug.steps"
+question = "Hatayı tekrar oluşturmak için numaralı adımlar yazılmış mı?"
+source = "eventhub docs/bug-report-template.md"
+tip = "Adımları numaralı yaz; başka biri yalnızca adımları izleyerek aynı hatayı görebilmeli."
+
+[[items]]
+id = "bug.expected_actual"
+question = "Beklenen sonuç ve gerçekleşen sonuç ayrı ayrı yazılmış mı?"
+source = "eventhub docs/bug-report-template.md"
+tip = "'Beklenen sonuç' ile 'Gerçekleşen sonuç'u ayrı yaz. Fark, hatanın ta kendisidir."
+
+[[items]]
+id = "bug.how_found"
+question = "Hatanın nasıl bulunduğu (otomatik test, test tasarım tekniği, keşif testi, kod incelemesi) yazılmış mı?"
+source = "eventhub docs/bug-report-template.md"
+tip = "Hatayı nasıl bulduğunu yaz (ör. 'sınır değer analizi', 'keşif testi'). Bu, hangi testlerin işe yaradığını gösterir."
+
+[[items]]
+id = "bug.single"
+question = "Kayıt tek bir hatayı mı anlatıyor?"
+source = "eventhub docs/bug-report-template.md"
+tip = "İki farklı sorun gördüysen iki ayrı kayıt aç; her biri ayrı düzeltilir ve ayrı doğrulanır."
+
+[[items]]
+id = "bug.objective"
+question = "Rapor nesnel mi: kişiyi veya duyguyu değil, gözlenen davranışı mı anlatıyor?"
+source = "eventhub docs/bug-report-template.md; docs/guides/qa-engineer.md §14"
+tip = "'Çok kötü çalışıyor' değil, 'Kontenjan dolunca uyarı çıkmıyor' yaz. Kimin kodu olduğunu değil, ne olduğunu anlat."

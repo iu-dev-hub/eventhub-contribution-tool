@@ -1,0 +1,38 @@
+kind = "code_review"
+title = "Kod incelemesi"
+
+[[items]]
+id = "review.finding"
+question = "İnceleme somut bir bulgu, soru veya neye bakıldığını söyleyen gerekçeli bir onay içeriyor mu?"
+source = "eventhub docs/guides/pull-requests.md §3; issue #68"
+tip = "Onay verirken bile neye baktığını bir cümleyle yaz (ör. 'Sınır değer testleri BR-3.2 ile uyumlu'). Bulgu içermeyen onay, inceleme sayılmaz."
+
+[[items]]
+id = "review.prefix"
+question = "Yorumların türü (zorunlu, soru, öneri, küçük, teşekkür) başta belirtilmiş mi?"
+source = "eventhub docs/guides/pull-requests.md §3"
+tip = "Yorumun başına türünü yaz ('zorunlu:', 'soru:', 'öneri:'); yazar neyin düzeltilmesi gerektiğini hemen anlar."
+
+[[items]]
+id = "review.reason"
+question = "Bulgular gerekçesiyle (iş kuralı, kabul kriteri, sınır değer gibi) yazılmış mı?"
+source = "eventhub docs/guides/pull-requests.md §3"
+tip = "'Bu yanlış' yerine nedenini yaz: 'BR-3.3'e göre satış 60 dk önce kapanmalı, burada 30 dk olmuş.'"
+
+[[items]]
+id = "review.tests"
+question = "Testler, sınır durumlar veya hata durumları hakkında bir değerlendirme var mı?"
+source = "eventhub docs/guides/pull-requests.md §3; CONTRIBUTING.md §5"
+tip = "İncelemede testlere de bak: Her kabul kriterinin testi var mı, sınır değerler denenmiş mi, bir test silinmiş veya gevşetilmiş mi?"
+
+[[items]]
+id = "review.suggestion"
+question = "Bir sorun belirtildiğinde çözüm önerisi de verilmiş mi?"
+source = "eventhub docs/guides/communication.md §5"
+tip = "Sorunu söyledikten sonra bir öneri ekle; GitHub'daki 'Add a suggestion' ile düzeltilmiş satırı doğrudan önerebilirsin."
+
+[[items]]
+id = "review.about_code"
+question = "Eleştiri kişiye değil, koda ve davranışa mı yönelik?"
+source = "eventhub CONTRIBUTING.md §5; docs/guides/communication.md §5"
+tip = "'Sen…' yerine 'Bu fonksiyon…' diye yaz. Koda yapılan eleştiri kabul görür, kişiye yapılan savunmaya iter."
