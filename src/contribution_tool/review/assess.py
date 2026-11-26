@@ -95,11 +95,17 @@ def response_schema(card: Card) -> dict[str, Any]:
     return {"type": "object", "properties": properties, "required": list(properties)}
 
 
-def build_prompt(evidence: Evidence, card: Card) -> str:
-    """The user prompt: the expectations, then the contribution text as data."""
+def shown_text(evidence: Evidence) -> str:
+    """The part of the text the model sees; the instructor labels the same part."""
     text = evidence.text.strip()
     if len(text) > MAX_CHARS:
         text = text[:MAX_CHARS] + "\n[...metin kısaltıldı]"
+    return text
+
+
+def build_prompt(evidence: Evidence, card: Card) -> str:
+    """The user prompt: the expectations, then the contribution text as data."""
+    text = shown_text(evidence)
     questions = "\n".join(f"- {item.id}: {item.question}" for item in card.items)
     return (
         f"Katkı türü: {card.title}\n\n"

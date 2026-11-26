@@ -9,7 +9,7 @@ from pathlib import Path
 
 from contribution_tool.adjustments import load_adjustments
 from contribution_tool.excel import write_excel
-from contribution_tool.github import collect_github
+from contribution_tool.github import GitHubData, collect_github
 from contribution_tool.github_api import (
     default_token_file,
     fetch_discussions,
@@ -45,12 +45,8 @@ def taiga_links_file() -> Path:
     return default_token_file().parent / "taiga-links.toml"
 
 
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        prog="contribution-tool",
-        description="Grade student contributions to EventHub from GitHub and Taiga.",
-    )
-    parser.add_argument("--students", required=True, type=Path, help="student list CSV")
+def add_source_arguments(parser: argparse.ArgumentParser) -> None:
+    """Where the contributions come from; shared with contribution-review."""
     taiga = parser.add_mutually_exclusive_group()
     taiga.add_argument("--taiga", type=Path, help=f"folder with {', '.join(TAIGA_FILES)}")
     taiga.add_argument(
@@ -61,20 +57,33 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--repo", default=DEFAULT_REPO, help=f"default: {DEFAULT_REPO}")
     parser.add_argument("--start", type=date.fromisoformat, help="first day, YYYY-MM-DD")
     parser.add_argument("--end", type=date.fromisoformat, help="last day, YYYY-MM-DD")
+    parser.add_argument(
+        "--no-taiga-history",
+        action="store_true",
+        help="use only the Taiga CSV exports, without logging in to Taiga",
+    )
+
+
+def check_dates(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    if args.start and args.end and args.start > args.end:
+        parser.error("--start must not be after --end")
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="contribution-tool",
+        description="Grade student contributions to EventHub from GitHub and Taiga.",
+    )
+    parser.add_argument("--students", required=True, type=Path, help="student list CSV")
+    add_source_arguments(parser)
     parser.add_argument("--role", help="role column in the student list, e.g. rol_d1")
     parser.add_argument(
         "--factor", type=float, default=DEFAULT_TARGET_FACTOR, help="role target factor"
     )
     parser.add_argument("--adjustments", type=Path, help="instructor adjustments CSV")
     parser.add_argument("--excel", type=Path, help="also save the report to this Excel file")
-    parser.add_argument(
-        "--no-taiga-history",
-        action="store_true",
-        help="use only the Taiga CSV exports, without logging in to Taiga",
-    )
     args = parser.parse_args(argv)
-    if args.start and args.end and args.start > args.end:
-        parser.error("--start must not be after --end")
+    check_dates(parser, args)
     return args
 
 
@@ -82,7 +91,12 @@ def run(args: argparse.Namespace) -> Report:
     """Read all inputs, download GitHub data and build the report."""
     students = load_students(args.students, role_column=args.role)
     adjustments = load_adjustments(args.adjustments) if args.adjustments else []
+    github, taiga = collect(args)
+    return build_report(students, github, taiga, args.factor, adjustments)
 
+
+def collect(args: argparse.Namespace) -> tuple[GitHubData, TaigaData]:
+    """Download the contributions from Taiga and GitHub."""
     taiga = TaigaData()
     exports = None
     if args.taiga:
@@ -100,8 +114,7 @@ def run(args: argparse.Namespace) -> Report:
     pull_requests = fetch_pull_requests(args.repo, send)
     discussions = fetch_discussions(args.repo, send)
     github = collect_github(pull_requests, discussions, args.start, args.end)
-
-    return build_report(students, github, taiga, args.factor, adjustments)
+    return github, taiga
 
 
 def _load_taiga_exports(folder: Path) -> list[list[dict[str, str]]]:
