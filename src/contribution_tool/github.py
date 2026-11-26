@@ -14,6 +14,7 @@ from datetime import date
 from typing import Any
 
 from contribution_tool.dates import in_range, parse_date
+from contribution_tool.evidence import Evidence
 
 Node = Mapping[str, Any]
 
@@ -22,6 +23,7 @@ Node = Mapping[str, Any]
 class GitHubData:
     counts: dict[str, Counter] = field(default_factory=lambda: defaultdict(Counter))
     emails: dict[str, set[str]] = field(default_factory=lambda: defaultdict(set))
+    evidence: list[Evidence] = field(default_factory=list)  # REQ-7.1
 
     @property
     def users(self) -> set[str]:
@@ -55,9 +57,22 @@ def collect_github(
 
 def _count_pull_request(data: GitHubData, pr: Node, start: date | None, end: date | None) -> None:
     author = login_of(pr)
+    number = pr.get("number")
     if author:
-        if in_range(parse_date(pr.get("createdAt")), start, end):
+        created = parse_date(pr.get("createdAt"))
+        if in_range(created, start, end):
             data.counts[author]["pr_opened"] += 1
+            data.evidence.append(
+                Evidence(
+                    kind="pull_request",
+                    author=author,
+                    created=created,
+                    title=f"PR #{number}: {pr.get('title', '')}",
+                    text=pr.get("body") or "",
+                    url=pr.get("url", ""),
+                    item_id=f"github:pr:{number}",
+                )
+            )
         if pr.get("mergedAt") and in_range(parse_date(pr["mergedAt"]), start, end):
             data.counts[author]["pr_merged"] += 1
 
@@ -66,11 +81,26 @@ def _count_pull_request(data: GitHubData, pr: Node, start: date | None, end: dat
         reviewer = login_of(review)
         if not reviewer or reviewer == author:  # REQ-1.4, REQ-1.6
             continue
-        if not in_range(parse_date(review.get("submittedAt")), start, end):
+        submitted = parse_date(review.get("submittedAt"))
+        if not in_range(submitted, start, end):
             continue
         reviewers.add(reviewer)
-        comments = (review.get("comments") or {}).get("totalCount", 0)
-        data.counts[reviewer]["review_comments"] += comments
+        comments = review.get("comments") or {}
+        data.counts[reviewer]["review_comments"] += comments.get("totalCount", 0)
+        lines = [review.get("body") or ""] + [
+            f"[{c.get('path', '')}] {c.get('body', '')}" for c in comments.get("nodes", [])
+        ]
+        data.evidence.append(
+            Evidence(
+                kind="code_review",
+                author=reviewer,
+                created=submitted,
+                title=f"Review on PR #{number}: {pr.get('title', '')}",
+                text="\n".join(line for line in lines if line.strip()),
+                url=pr.get("url", ""),
+                item_id=f"github:review:{number}:{reviewer}:{review.get('submittedAt')}",
+            )
+        )
     for reviewer in reviewers:  # several reviews on the same PR count as one
         data.counts[reviewer]["reviews"] += 1
 
@@ -92,5 +122,18 @@ def _count_discussion(
         posts.extend((comment.get("replies") or {}).get("nodes", []))
     for post in posts:
         login = login_of(post)
-        if login and in_range(parse_date(post.get("createdAt")), start, end):
+        created = parse_date(post.get("createdAt"))
+        if login and in_range(created, start, end):
             data.counts[login]["discussion_posts"] += 1
+            url = post.get("url") or discussion.get("url", "")
+            data.evidence.append(
+                Evidence(
+                    kind="discussion_post",
+                    author=login,
+                    created=created,
+                    title=discussion.get("title", ""),
+                    text=post.get("body") or "",
+                    url=url,
+                    item_id=f"github:discussion:{url}:{post.get('createdAt')}",
+                )
+            )

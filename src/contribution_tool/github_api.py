@@ -22,15 +22,17 @@ query($owner: String!, $name: String!, $cursor: String) {
     pullRequests(first: 50, after: $cursor) {
       pageInfo { hasNextPage endCursor }
       nodes {
-        number title url createdAt mergedAt author { login }
+        number title body url createdAt mergedAt author { login }
         reviews(first: 100) {
-          nodes { author { login } submittedAt comments { totalCount } }
+          nodes {
+            author { login } submittedAt body
+            comments(first: 20) { totalCount nodes { body path } }
+          }
         }
         commits(first: 100) {
           nodes { commit { author { email user { login } } } }
         }
       }
-    }
   }
 }
 """
@@ -45,8 +47,8 @@ query($owner: String!, $name: String!, $cursor: String) {
         comments(first: 100) {
           pageInfo { hasNextPage endCursor }
           nodes {
-            createdAt author { login }
-            replies(first: 100) { nodes { createdAt author { login } } }
+            createdAt body url author { login }
+            replies(first: 100) { nodes { createdAt body url author { login } } }
           }
         }
       }
@@ -62,8 +64,8 @@ query($id: ID!, $cursor: String) {
       comments(first: 100, after: $cursor) {
         pageInfo { hasNextPage endCursor }
         nodes {
-          createdAt author { login }
-          replies(first: 100) { nodes { createdAt author { login } } }
+          createdAt body url author { login }
+          replies(first: 100) { nodes { createdAt body url author { login } } }
         }
       }
     }

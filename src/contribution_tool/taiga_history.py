@@ -12,6 +12,7 @@ from datetime import date
 from typing import Any
 
 from contribution_tool.dates import in_range, parse_date
+from contribution_tool.evidence import Evidence
 from contribution_tool.matching import normalize_name
 from contribution_tool.taiga import TaigaData
 
@@ -41,7 +42,7 @@ def collect_history(
             if _moved_to_done(entry, done_statuses):
                 data.counts[user]["stories_accepted"] += 1
             if _is_comment(entry):
-                data.counts[user]["taiga_comments"] += 1
+                _add_comment(data, user, entry)
 
     for history in other_histories:
         for entry in history:
@@ -49,8 +50,24 @@ def collect_history(
             if not user or not in_range(parse_date(entry.get("created_at")), start, end):
                 continue
             if _is_comment(entry):
-                data.counts[user]["taiga_comments"] += 1
+                _add_comment(data, user, entry)
     return data
+
+
+def _add_comment(data: TaigaData, user: str, entry: Entry) -> None:
+    """Count a comment and keep its text (REQ-1.9, REQ-7.1)."""
+    data.counts[user]["taiga_comments"] += 1
+    data.evidence.append(
+        Evidence(
+            kind="taiga_comment",
+            author=user,
+            created=parse_date(entry.get("created_at")),
+            title="Taiga comment",
+            text=entry["comment"].strip(),
+            url="",
+            item_id=f"taiga:comment:{entry.get('id') or entry.get('created_at')}",
+        )
+    )
 
 
 def _username(data: TaigaData, entry: Entry) -> str | None:

@@ -12,6 +12,7 @@ from datetime import date
 from pathlib import Path
 
 from contribution_tool.dates import in_range, parse_date
+from contribution_tool.evidence import Evidence
 from contribution_tool.matching import normalize_name
 
 REJECTED = {"reddedildi", "rejected"}
@@ -25,6 +26,7 @@ Row = Mapping[str, str]
 class TaigaData:
     counts: dict[str, Counter] = field(default_factory=lambda: defaultdict(Counter))
     users: dict[str, str] = field(default_factory=dict)
+    evidence: list[Evidence] = field(default_factory=list)  # REQ-7.1
 
 
 def load_csv(source: str | Path) -> list[dict[str, str]]:
@@ -56,6 +58,7 @@ def collect_taiga(
         _remember_users(data, row)
         if row["owner"] and in_range(parse_date(row["created_date"]), start, end):
             data.counts[row["owner"].lower()]["stories_written"] += 1
+            data.evidence.append(_evidence("user_story", "us", row))
         if _closed_by_assignee(row, start, end):
             data.counts[row["assigned_to"].lower()]["stories_done"] += 1
 
@@ -70,10 +73,24 @@ def collect_taiga(
             continue
         if row["owner"] and in_range(parse_date(row["created_date"]), start, end):
             data.counts[row["owner"].lower()]["bugs_reported"] += 1
+            data.evidence.append(_evidence("bug_report", "issue", row))
         if _closed_by_assignee(row, start, end):
             data.counts[row["assigned_to"].lower()]["bugs_fixed"] += 1
 
     return data
+
+
+def _evidence(kind: str, prefix: str, row: Row) -> Evidence:
+    """A user story or an issue written by its owner, with its description (REQ-7.1)."""
+    return Evidence(
+        kind=kind,
+        author=row["owner"].lower(),
+        created=parse_date(row["created_date"]),
+        title=f"#{row.get('ref', '')} {row.get('subject', '')}".strip(),
+        text=row.get("description", ""),
+        url="",
+        item_id=f"taiga:{prefix}:{row.get('id') or row.get('ref', '')}",
+    )
 
 
 def _checked(rows: Iterable[Row], name: str) -> list[Row]:
@@ -121,4 +138,5 @@ def merge_taiga(*parts: TaigaData) -> TaigaData:
             merged.counts[user].update(counts)
         for user, full_name in part.users.items():
             merged.users[user] = full_name or merged.users.get(user, "")
+        merged.evidence.extend(part.evidence)
     return merged
