@@ -33,6 +33,7 @@ query($owner: String!, $name: String!, $cursor: String) {
           nodes { commit { author { email user { login } } } }
         }
       }
+    }
   }
 }
 """

@@ -8,6 +8,9 @@ import json
 import pytest
 
 from contribution_tool.github_api import (
+    DISCUSSIONS_QUERY,
+    MORE_COMMENTS_QUERY,
+    PULL_REQUESTS_QUERY,
     fetch_discussions,
     fetch_pull_requests,
     graphql_request,
@@ -122,3 +125,19 @@ def test_api_error_stops_with_message(monkeypatch):
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
     with pytest.raises(RuntimeError, match="Bad credentials"):
         graphql_request("wrong-token")("query { ok }", {})
+
+
+# The queries are only checked by GitHub; a missing brace is found here instead
+
+
+@pytest.mark.parametrize(
+    "query",
+    [PULL_REQUESTS_QUERY, DISCUSSIONS_QUERY, MORE_COMMENTS_QUERY],
+    ids=["pull_requests", "discussions", "more_comments"],
+)
+def test_query_braces_are_balanced(query):
+    depth = 0
+    for char in query:
+        depth += {"{": 1, "}": -1}.get(char, 0)
+        assert depth >= 0, "a '}' closes nothing"
+    assert depth == 0, f"{depth} '{{' not closed"
