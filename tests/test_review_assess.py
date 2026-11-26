@@ -99,7 +99,7 @@ def test_not_applicable_is_accepted_where_the_question_allows_it():
 
 
 def test_not_applicable_is_refused_where_the_question_does_not_allow_it():
-    # Found in the acceptance test: two models used it for review.suggestion
+    # Found in the acceptance test: models used it where the question did not allow it
     answer = dict(GOOD_ANSWER, **{"review.prefix": {"answer": NOT_APPLICABLE, "note": ""}})
     with pytest.raises(ModelResponseError, match="review.prefix"):
         assess(review(), CARD, FakeModel(answer), "m")

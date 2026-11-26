@@ -30,7 +30,7 @@ tip = "İşlerin yanına PR veya TG numarasını ekle; okuyan kişi ayrıntıya 
 
 [[items]]
 id = "post.decision"
-question = "Bir karar veya ekipler arası bağımlılık içeriyorsa, sorumlusu ve tarihi yazılmış mı? (Karar veya bağımlılık yoksa uygulanamaz.)"
+question = "Yazıda bir karar (ör. bir işi kapsam dışı bırakmak, bir konuyu birine danışmak) veya ekipler arası bağımlılık varsa, hem sorumlusu (kişi veya ekip) hem tarihi (gün veya sprint) yazılmış mı? Biri eksikse karşılanmadı. (Karar veya bağımlılık yoksa uygulanamaz.)"
 not_applicable = true
 source = "eventhub docs/guides/scrum-master.md §6"
 tip = "Kararları sorumlusu ve tarihiyle yaz (ör. 'get_event → Sprint 3 sonuna kadar, sorumlu: team-events'). Yazılmayan karar alınmamış sayılır."

@@ -34,7 +34,7 @@ tip = "Hatayı nasıl bulduğunu yaz (ör. 'sınır değer analizi', 'keşif tes
 
 [[items]]
 id = "bug.single"
-question = "Kayıt tek bir hatayı mı anlatıyor?"
+question = "Kayıt yalnızca bir hatalı davranışı mı anlatıyor? Birbirinden bağımsız iki veya daha fazla hatalı davranış (ör. hem sınır aşımı hem yanlış hata kodu) varsa karşılanmadı."
 source = "eventhub docs/bug-report-template.md"
 tip = "İki farklı sorun gördüysen iki ayrı kayıt aç; her biri ayrı düzeltilir ve ayrı doğrulanır."
 

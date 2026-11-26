@@ -1,5 +1,7 @@
 """Tests for expectation cards (REQ-7.2)."""
 
+import re
+
 import pytest
 
 from contribution_tool.cards import load_card, load_cards
@@ -50,6 +52,14 @@ def test_not_applicable_is_allowed_exactly_where_the_question_mentions_it():
     for card in load_cards().values():
         for item in card.items:
             assert item.not_applicable == ("uygulanamaz" in item.question), item.id
+
+
+def test_questions_are_asked_positively():
+    # Found in calibration: "...yazılmamış mı?" confused every model ("met" meant "absent")
+    negative = re.compile(r"m[ae]m[ıi]ş m[ıi]\?|m[ae]z m[ıi]\?|m[ae]yor mu\?")
+    for card in load_cards().values():
+        for item in card.items:
+            assert not negative.search(item.question), item.id
 
 
 # Checking card files
