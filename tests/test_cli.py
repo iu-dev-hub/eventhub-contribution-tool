@@ -200,8 +200,37 @@ def test_taiga_login_error_stops_with_message(
     monkeypatch.setattr(cli, "get_credentials", lambda: ("hoca", "yanlis"))
     monkeypatch.setattr(cli, "login", wrong_password)
     taiga = write_taiga(tmp_path / "taiga")
+    (taiga / "userstories.csv").write_text(  # one item to download, so a login is needed
+        STORY_HEADER + "7,103,,,Done,True,2026-10-01,2026-10-31\n", encoding="utf-8"
+    )
     assert cli.main(["--students", str(students_csv), "--taiga", str(taiga)]) == 1
     assert "Taiga login failed" in capsys.readouterr().err
+
+
+# REQ-1.10 — Unchanged Taiga items are not downloaded again
+
+
+def test_second_run_reads_saved_history_without_logging_in(
+    fake_github, fake_taiga, students_csv, tmp_path, monkeypatch, capsys
+):
+    monkeypatch.setattr(cli, "TAIGA_HISTORY_DIR", tmp_path / "taiga-history")
+    taiga = write_taiga(tmp_path / "taiga")
+    (taiga / "userstories.csv").write_text(
+        "id,ref,owner,assigned_to,status,is_closed,created_date,finished_date,modified_date\n"
+        "7,103,,,Done,True,2026-10-01,2026-10-31,2026-10-31T16:50:51+0000\n",
+        encoding="utf-8",
+    )
+    args = ["--students", str(students_csv), "--taiga", str(taiga)]
+    assert cli.main(args) == 0
+    assert "1 downloaded, 0 from the saved copy" in capsys.readouterr().err
+
+    def must_not_log_in():
+        raise AssertionError("nothing changed, so Taiga login should be skipped")
+
+    monkeypatch.setattr(cli, "get_credentials", must_not_log_in)
+    assert cli.main(args) == 0
+    assert "0 downloaded, 1 from the saved copy" in capsys.readouterr().err
+    assert fake_taiga.asked == ["/history/userstory/7"]
 
 
 # REQ-5.1 — The report can also be saved to Excel

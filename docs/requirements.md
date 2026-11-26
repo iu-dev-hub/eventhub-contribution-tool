@@ -47,6 +47,11 @@ otomatik yazdığı yorumlar ("This task has been mentioned…" gibi) sayılmaz.
 *Kaynak: kabul testinde 3.853 Taiga yorumunun 3.769'unun entegrasyon mesajı olduğu
 bulundu.*
 
+**REQ-1.10** İndirilen Taiga geçmişleri saklanır. Bir kaydın CSV dışa aktarımındaki
+değişme tarihi (`modified_date`) değişmediyse geçmişi yeniden indirilmez; indirilecek
+kayıt yoksa Taiga'ya giriş yapılmaz.
+*Kaynak: her çalıştırmada yüzlerce kaydın geçmişinin yeniden indirilmesi.*
+
 ## 2. Öğrenci eşleme
 
 **REQ-2.1** Öğrenci listesinde her öğrenci için ad soyad zorunludur. Diğer sütunlar
