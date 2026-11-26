@@ -27,7 +27,8 @@ tip = "İncelemede testlere de bak: Her kabul kriterinin testi var mı, sınır 
 
 [[items]]
 id = "review.suggestion"
-question = "Bir sorun belirtildiğinde çözüm önerisi de verilmiş mi?"
+question = "İncelemede belirtilen her sorun için bir çözüm önerisi de verilmiş mi? (İncelemede hiç sorun belirtilmemişse uygulanamaz.)"
+not_applicable = true
 source = "eventhub docs/guides/communication.md §5"
 tip = "Sorunu söyledikten sonra bir öneri ekle; GitHub'daki 'Add a suggestion' ile düzeltilmiş satırı doğrudan önerebilirsin."
 

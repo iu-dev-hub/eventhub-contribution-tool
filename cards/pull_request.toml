@@ -9,7 +9,8 @@ tip = "PR şablonundaki 'Related work item' bölümüne Taiga numarasını TG-42
 
 [[items]]
 id = "pr.no_auto_close"
-question = "TG numarasından sonra '#closed' gibi Taiga kaydını kapatan bir durum yazılmamış mı?"
+question = "TG numarası yalnız başına mı yazılmış (doğru: 'TG-42'; yanlış: 'TG-42 #closed')? (PR'da TG numarası yoksa uygulanamaz.)"
+not_applicable = true
 source = "eventhub .github/pull_request_template.md"
 tip = "TG numarasından sonra '#closed' yazma: Hikâyeyi yalnızca PO, kabul ederek kapatır."
 
