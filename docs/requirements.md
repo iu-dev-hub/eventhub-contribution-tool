@@ -147,6 +147,10 @@ yapar. Kullanıcı adı `CONTRIBUTION_TOOL_TAIGA_USERNAME` ortam değişkeninden
 Şifre `CONTRIBUTION_TOOL_TAIGA_PASSWORD` değişkeninden okunur; yoksa ekranda gösterilmeden
 sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 
+**REQ-6.5** Taiga CSV dışa aktarım bağlantıları giriş gerektirmediği için şifre gibi
+korunur: repo dışındaki ayar klasöründe `taiga-links.toml` dosyasında saklanır ve
+repoya yazılmaz.
+
 ## 7. Nitel değerlendirme (v2)
 
 **REQ-7.1** Araç her katkının türünü, yazarını, tarihini, metnini ve bağlantısını saklar:

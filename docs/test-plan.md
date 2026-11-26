@@ -122,5 +122,4 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-6.2 | Denklik sınıfı | `tests/test_privacy.py` |
 | REQ-6.3 | Hata tahmini | `tests/test_privacy.py` |
 | REQ-6.4 | Denklik sınıfı | `tests/test_taiga_api.py` |
-
-
+| REQ-6.5 | Denklik sınıfı | `tests/test_taiga_links.py` |

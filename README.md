@@ -13,8 +13,8 @@ before the code.
 
 1. Reads the instructor's student list (name, role, e-mail or usernames).
 2. Downloads pull requests, reviews and discussions from GitHub.
-3. Reads user stories, tasks and issues from Taiga's CSV exports, and downloads their
-   change history from the Taiga API.
+3. Downloads user stories, tasks and issues from Taiga's CSV exports, and their change
+   history from the Taiga API.
 4. Links each student to their GitHub and Taiga accounts and reports anything that
    cannot be linked.
 5. Scores each student with the weights of their role (Product Owner, Scrum Master,
@@ -39,16 +39,12 @@ pre-commit install
 
 ### 2. Data
 
-All real data lives in the `data/` folder, which is never committed:
+The instructor's own files live in the `data/` folder, which is never committed:
 
 ```
 data/
 ├── ogrenciler.csv            student list
-├── duzeltmeler_d1.csv        instructor adjustments (optional)
-└── taiga/
-    ├── userstories.csv
-    ├── tasks.csv
-    └── issues.csv
+└── duzeltmeler_d1.csv        instructor adjustments (optional)
 ```
 
 The folder contains personal data. Move it between computers only on a USB stick or an
@@ -87,7 +83,30 @@ source ~/.bashrc
 The password is asked on screen at every run without being shown, and is never stored.
 If you sign in to Taiga with GitHub, set a password in your Taiga profile first.
 
-### 5. Check
+### 5. Taiga export links
+
+Taiga gives a download link for each CSV export (Settings → Project → Reports). Save the
+three links once, next to the GitHub token:
+
+```bash
+nano ~/.config/contribution-tool/taiga-links.toml
+chmod 600 ~/.config/contribution-tool/taiga-links.toml
+```
+
+```toml
+userstories = "https://api.taiga.io/api/v1/userstories/csv?uuid=..."
+tasks = "https://api.taiga.io/api/v1/tasks/csv?uuid=..."
+issues = "https://api.taiga.io/api/v1/issues/csv?uuid=..."
+```
+
+These links work **without logging in**: anyone who has them can download the exports
+with students' names. Keep them like a password and never write them in the repository
+or in an issue. If a link may have leaked, regenerate it on the same Taiga page.
+
+With `--taiga-online` the newest exports are downloaded at every run. You can still use
+downloaded files with `--taiga <folder>` instead.
+
+### 6. Check
 
 ```bash
 contribution-tool --help
@@ -99,7 +118,7 @@ pytest
 ```bash
 contribution-tool \
     --students data/ogrenciler.csv \
-    --taiga data/taiga \
+    --taiga-online \
     --start 2026-09-21 --end 2026-10-19 \
     --role rol_d1 \
     --adjustments data/duzeltmeler_d1.csv \
@@ -109,7 +128,8 @@ contribution-tool \
 | Option | Required | Description |
 |---|---|---|
 | `--students` | yes | Student list CSV |
-| `--taiga` | no | Folder with `userstories.csv`, `tasks.csv` and `issues.csv` |
+| `--taiga-online` | no | Download the Taiga exports from the saved links |
+| `--taiga` | no | Folder with downloaded `userstories.csv`, `tasks.csv` and `issues.csv` (instead of `--taiga-online`) |
 | `--repo` | no | GitHub repository, default `iu-dev-hub/eventhub` |
 | `--start`, `--end` | no | Date range, `YYYY-MM-DD`; both days are included, in Turkey time |
 | `--role` | no | Role column to use, e.g. `rol_d2`; default is the first `rol*` column |
@@ -132,12 +152,6 @@ Values containing `@` are treated as e-mails, other values as usernames. Write t
 Taiga **username**, not the display name; it is in the profile address
 `tree.taiga.io/profile/<username>`. Roles can be written as `PO`, `SM`, `Back`, `Front`,
 `Testçi` (or `QA`); `Dev` counts as `Back`.
-
-### Taiga exports
-
-In Taiga, open **Settings → Project → Reports** and download the CSV files for user
-stories, tasks and issues. Save them as `userstories.csv`, `tasks.csv` and `issues.csv`
-in `data/taiga/`. Download them again before every run, so new items are included.
 
 ### Instructor adjustments
 
@@ -166,8 +180,10 @@ to people who are not students; check them for students whose usernames are miss
 
 ## Privacy
 
-- The student list, Taiga exports, adjustments and reports contain personal data. Keep
-  them in `data/`; it is listed in `.gitignore` and a test checks this.
+- The student list, adjustments and reports contain personal data. Keep them in
+  `data/`; it is listed in `.gitignore` and a test checks this.
+- The GitHub token and the Taiga export links are kept outside the repository, in
+  `~/.config/contribution-tool/`, readable only by you.
 - Never commit a token. A test fails if a GitHub token appears in the source code.
 - All test data in this repository is made up and uses `example.org` addresses.
 

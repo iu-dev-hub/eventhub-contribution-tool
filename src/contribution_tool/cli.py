@@ -11,6 +11,7 @@ from contribution_tool.adjustments import load_adjustments
 from contribution_tool.excel import write_excel
 from contribution_tool.github import collect_github
 from contribution_tool.github_api import (
+    default_token_file,
     fetch_discussions,
     fetch_pull_requests,
     get_token,
@@ -19,7 +20,13 @@ from contribution_tool.github_api import (
 from contribution_tool.report import Report, build_report
 from contribution_tool.scoring import DEFAULT_TARGET_FACTOR
 from contribution_tool.students import load_students
-from contribution_tool.taiga import TaigaData, collect_taiga, load_csv, merge_taiga
+from contribution_tool.taiga import (
+    TaigaData,
+    collect_taiga,
+    load_csv,
+    load_exports_from_config,
+    merge_taiga,
+)
 from contribution_tool.taiga_api import (
     fetch_histories,
     get_credentials,
@@ -33,13 +40,24 @@ DEFAULT_REPO = "iu-dev-hub/eventhub"
 TAIGA_FILES = ("userstories.csv", "tasks.csv", "issues.csv")
 
 
+def taiga_links_file() -> Path:
+    """The Taiga export links live next to the GitHub token, outside the repository."""
+    return default_token_file().parent / "taiga-links.toml"
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="contribution-tool",
         description="Grade student contributions to EventHub from GitHub and Taiga.",
     )
     parser.add_argument("--students", required=True, type=Path, help="student list CSV")
-    parser.add_argument("--taiga", type=Path, help=f"folder with {', '.join(TAIGA_FILES)}")
+    taiga = parser.add_mutually_exclusive_group()
+    taiga.add_argument("--taiga", type=Path, help=f"folder with {', '.join(TAIGA_FILES)}")
+    taiga.add_argument(
+        "--taiga-online",
+        action="store_true",
+        help="download the Taiga exports from the links in the config folder",
+    )
     parser.add_argument("--repo", default=DEFAULT_REPO, help=f"default: {DEFAULT_REPO}")
     parser.add_argument("--start", type=date.fromisoformat, help="first day, YYYY-MM-DD")
     parser.add_argument("--end", type=date.fromisoformat, help="last day, YYYY-MM-DD")
@@ -66,8 +84,13 @@ def run(args: argparse.Namespace) -> Report:
     adjustments = load_adjustments(args.adjustments) if args.adjustments else []
 
     taiga = TaigaData()
+    exports = None
     if args.taiga:
-        stories, tasks, issues = _load_taiga_exports(args.taiga)
+        exports = _load_taiga_exports(args.taiga)
+    elif args.taiga_online:
+        exports = load_exports_from_config(taiga_links_file())
+    if exports:
+        stories, tasks, issues = exports
         taiga = collect_taiga(stories, tasks, issues, args.start, args.end)
         if not args.no_taiga_history:
             history = _taiga_history(stories, tasks, issues, args.start, args.end)
