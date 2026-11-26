@@ -8,7 +8,7 @@ import urllib.request
 from collections.abc import Mapping
 from typing import Any
 
-from contribution_tool.review.assess import Ask
+from contribution_tool.review.assess import Ask, ModelResponseError
 
 OLLAMA_URL = "http://localhost:11434"
 CONTEXT_TOKENS = 4096
@@ -60,7 +60,7 @@ def ollama(model: str, url: str = OLLAMA_URL, context: int = CONTEXT_TOKENS) -> 
         except json.JSONDecodeError:
             reason = reply.get("done_reason", "unknown")
             hint = " (the answer was cut: context too small)" if reason == "length" else ""
-            raise RuntimeError(
+            raise ModelResponseError(
                 f"Ollama returned an answer that is not JSON{hint}. "
                 f"done_reason={reason}, start of answer: {content[:120]!r}"
             ) from None

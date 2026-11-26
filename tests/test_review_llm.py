@@ -6,6 +6,7 @@ import urllib.error
 
 import pytest
 
+from contribution_tool.review.assess import ModelResponseError
 from contribution_tool.review.llm import ollama
 
 
@@ -66,7 +67,7 @@ def test_answer_that_is_not_json_stops_with_error(monkeypatch):
         "urllib.request.urlopen",
         lambda request, timeout: FakeResponse({"message": {"content": "tamam, hepsi met"}}),
     )
-    with pytest.raises(RuntimeError, match="not JSON.*tamam, hepsi met"):
+    with pytest.raises(ModelResponseError, match="not JSON.*tamam, hepsi met"):
         ollama("test-model")("s", "p", {})
 
 
