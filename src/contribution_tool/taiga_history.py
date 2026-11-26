@@ -7,6 +7,7 @@ This module processes history entries that have already been downloaded.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Mapping
 from datetime import date
 from typing import Any
@@ -17,6 +18,10 @@ from contribution_tool.matching import normalize_name
 from contribution_tool.taiga import TaigaData
 
 DONE_STATUSES = frozenset({"bitti", "done", "kapandi", "closed"})
+
+# Comments written by the GitHub integration when a commit or pull request mentions an
+# item, e.g. "This task has been mentioned by ... in the commit ..." (REQ-1.9)
+AUTOMATIC_COMMENT = re.compile(r"^\s*this (task|user story|issue|epic) has been\b", re.IGNORECASE)
 
 Entry = Mapping[str, Any]
 
@@ -89,4 +94,6 @@ def _moved_to_done(entry: Entry, done_statuses: frozenset[str]) -> bool:
 
 
 def _is_comment(entry: Entry) -> bool:
-    return bool((entry.get("comment") or "").strip()) and not entry.get("delete_comment_date")
+    """A comment written by a person: not empty, not deleted, not from the integration."""
+    text = (entry.get("comment") or "").strip()
+    return bool(text) and not entry.get("delete_comment_date") and not AUTOMATIC_COMMENT.match(text)

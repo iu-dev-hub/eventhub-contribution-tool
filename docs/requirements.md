@@ -42,7 +42,10 @@ kayıtlarının durum değişiklikleri bu ölçüte girmez.
 CSV'sinde hiç görünmediği bulundu.*
 
 **REQ-1.9** Kullanıcı hikâyesi, görev ve hata kayıtlarına yazılan yorumlar, yorumu
-yazan kullanıcı için sayılır. Boş ve silinmiş yorumlar sayılmaz.
+yazan kullanıcı için sayılır. Boş ve silinmiş yorumlar ile GitHub entegrasyonunun
+otomatik yazdığı yorumlar ("This task has been mentioned…" gibi) sayılmaz.
+*Kaynak: kabul testinde 3.853 Taiga yorumunun 3.769'unun entegrasyon mesajı olduğu
+bulundu.*
 
 ## 2. Öğrenci eşleme
 

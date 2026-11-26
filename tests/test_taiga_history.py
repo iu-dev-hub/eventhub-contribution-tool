@@ -97,3 +97,36 @@ def test_users_are_collected_with_full_names():
 def test_entry_without_user_is_skipped():
     data = collect_history([[entry(username=None, status=("Testte", "Done"))]])
     assert data.users == {}
+
+
+# REQ-1.9 — Comments added by the GitHub integration are not counted
+# Source: acceptance test, 3,769 of 3,853 Taiga comments were written by the integration
+
+
+@pytest.mark.parametrize(
+    "comment",
+    [
+        "This task has been mentioned by [@ogrencibes](https://example.org) in the commit abc",
+        "This user story has been mentioned by [@ogrencibes](https://example.org) in PR #12",
+        "This issue has been closed by [@ogrencibes](https://example.org)",
+        "  this TASK has been updated",
+    ],
+)
+def test_automatic_comment_is_not_counted_or_kept(comment):
+    data = collect_history([[entry(comment=comment)]])
+    assert data.counts["ogrencibes"]["taiga_comments"] == 0
+    assert data.evidence == []
+
+
+@pytest.mark.parametrize(
+    "comment",
+    [
+        "## Test Sonuçları\nKabul kriteri 2 sağlanmıyor",
+        "This task needs a test for the 48th hour",
+        "PR #83 incelemesinde paylaşılan bulgular düzeltildi",
+    ],
+)
+def test_comment_written_by_a_person_is_counted(comment):
+    data = collect_history([[entry(comment=comment)]])
+    assert data.counts["ogrencibes"]["taiga_comments"] == 1
+    assert len(data.evidence) == 1
