@@ -46,6 +46,12 @@ def test_industry_items_name_a_source_outside_eventhub():
         assert any(not part.startswith("eventhub") for part in sources), item.id
 
 
+def test_not_applicable_is_allowed_exactly_where_the_question_mentions_it():
+    for card in load_cards().values():
+        for item in card.items:
+            assert item.not_applicable == ("uygulanamaz" in item.question), item.id
+
+
 # Checking card files
 
 

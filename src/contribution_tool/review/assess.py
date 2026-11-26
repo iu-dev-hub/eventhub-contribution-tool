@@ -8,7 +8,7 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from contribution_tool.cards import Card
+from contribution_tool.cards import Card, CardItem
 from contribution_tool.evidence import Evidence
 
 MET, NOT_MET, NOT_APPLICABLE = "met", "not_met", "not_applicable"
@@ -69,17 +69,28 @@ def content_hash(evidence: Evidence) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:12]
 
 
+def allowed_answers(item: CardItem) -> tuple[str, ...]:
+    """'Not applicable' is only allowed where the question says so."""
+    return ANSWERS if item.not_applicable else (MET, NOT_MET)
+
+
 def response_schema(card: Card) -> dict[str, Any]:
-    """JSON schema with one required entry per card item, so no item can be skipped."""
-    answer = {
-        "type": "object",
-        "properties": {
-            "answer": {"type": "string", "enum": list(ANSWERS)},
-            "note": {"type": "string"},
-        },
-        "required": ["answer", "note"],
+    """JSON schema with one required entry per card item, so no item can be skipped.
+
+    Each item only offers the answers it allows: in the acceptance test, two models
+    answered "not applicable" where the question did not allow it.
+    """
+    properties: dict[str, Any] = {
+        item.id: {
+            "type": "object",
+            "properties": {
+                "answer": {"type": "string", "enum": list(allowed_answers(item))},
+                "note": {"type": "string"},
+            },
+            "required": ["answer", "note"],
+        }
+        for item in card.items
     }
-    properties = {item.id: answer for item in card.items}
     properties["suspicious"] = {"type": "boolean"}
     return {"type": "object", "properties": properties, "required": list(properties)}
 
@@ -117,13 +128,13 @@ def assess(evidence: Evidence, card: Card, ask: Ask, model: str) -> Assessment:
         return Assessment(results=results, suspicious=False, empty=True, **common)
 
     answer = ask(SYSTEM_PROMPT, build_prompt(evidence, card), response_schema(card))
-    results = tuple(_item_result(answer, item.id) for item in card.items)
+    results = tuple(_item_result(answer, item) for item in card.items)
     suspicious = bool(answer.get("suspicious")) or bool(SUSPICIOUS.search(evidence.text))
     return Assessment(results=results, suspicious=suspicious, empty=False, **common)
 
 
-def _item_result(answer: Mapping[str, Any], item_id: str) -> ItemResult:
-    entry = answer.get(item_id)
-    if not isinstance(entry, Mapping) or entry.get("answer") not in ANSWERS:
-        raise ModelResponseError(f"No valid answer for '{item_id}' in the model's response")
-    return ItemResult(item_id, entry["answer"], str(entry.get("note", "")).strip())
+def _item_result(answer: Mapping[str, Any], item: CardItem) -> ItemResult:
+    entry = answer.get(item.id)
+    if not isinstance(entry, Mapping) or entry.get("answer") not in allowed_answers(item):
+        raise ModelResponseError(f"No valid answer for '{item.id}' in the model's response")
+    return ItemResult(item.id, entry["answer"], str(entry.get("note", "")).strip())

@@ -21,7 +21,7 @@ tip = "'Bu yanlış' yerine nedenini yaz: 'BR-3.3'e göre satış 60 dk önce ka
 
 [[items]]
 id = "review.tests"
-question = "Testler, sınır durumlar veya hata durumları hakkında bir değerlendirme var mı?"
+question = "Testler, sınır durumlar veya hata durumları hakkında bir değerlendirme (eksik testin belirtilmesi dahil) var mı?"
 source = "eventhub docs/guides/pull-requests.md §3; CONTRIBUTING.md §5"
 tip = "İncelemede testlere de bak: Her kabul kriterinin testi var mı, sınır değerler denenmiş mi, bir test silinmiş veya gevşetilmiş mi?"
 

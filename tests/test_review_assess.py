@@ -25,6 +25,13 @@ CARD = Card(
     items=(
         CardItem("review.finding", "Somut bulgu var mı?", "kaynak", "öneri"),
         CardItem("review.prefix", "Tür belirtilmiş mi?", "kaynak", "öneri"),
+        CardItem(
+            "review.question",
+            "Soruysa açık mı? (Soru değilse uygulanamaz.)",
+            "kaynak",
+            "öneri",
+            not_applicable=True,
+        ),
     ),
     fingerprint="card123",
 )
@@ -59,6 +66,7 @@ class FakeModel:
 GOOD_ANSWER = {
     "review.finding": {"answer": "met", "note": "BR-3.3 ile gerekçeli bulgu var."},
     "review.prefix": {"answer": "met", "note": "'zorunlu:' öneki var."},
+    "review.question": {"answer": "not_applicable", "note": "Soru değil."},
     "suspicious": False,
 }
 
@@ -71,6 +79,7 @@ def test_every_item_gets_the_models_answer():
     assert [(r.item_id, r.answer) for r in result.results] == [
         ("review.finding", MET),
         ("review.prefix", MET),
+        ("review.question", NOT_APPLICABLE),
     ]
     assert result.results[0].note == "BR-3.3 ile gerekçeli bulgu var."
 
@@ -84,10 +93,16 @@ def test_result_keeps_ids_for_the_cache():
     assert result.content_hash == content_hash(review())
 
 
-def test_not_applicable_is_accepted():
+def test_not_applicable_is_accepted_where_the_question_allows_it():
+    result = assess(review(), CARD, FakeModel(GOOD_ANSWER), "m")
+    assert result.results[2].answer == NOT_APPLICABLE
+
+
+def test_not_applicable_is_refused_where_the_question_does_not_allow_it():
+    # Found in the acceptance test: two models used it for review.suggestion
     answer = dict(GOOD_ANSWER, **{"review.prefix": {"answer": NOT_APPLICABLE, "note": ""}})
-    result = assess(review(), CARD, FakeModel(answer), "m")
-    assert result.results[1].answer == NOT_APPLICABLE
+    with pytest.raises(ModelResponseError, match="review.prefix"):
+        assess(review(), CARD, FakeModel(answer), "m")
 
 
 @pytest.mark.parametrize(
@@ -103,11 +118,20 @@ def test_invalid_model_answer_stops_with_error(bad):
         assess(review(), CARD, FakeModel(bad), "m")
 
 
-def test_schema_requires_every_item_and_allows_only_known_answers():
+def test_schema_requires_every_item_and_offers_only_allowed_answers():
     schema = response_schema(CARD)
-    assert schema["required"] == ["review.finding", "review.prefix", "suspicious"]
-    answer = schema["properties"]["review.finding"]["properties"]["answer"]
-    assert answer["enum"] == [MET, NOT_MET, NOT_APPLICABLE]
+    assert schema["required"] == [
+        "review.finding",
+        "review.prefix",
+        "review.question",
+        "suspicious",
+    ]
+
+    def enum(item_id):
+        return schema["properties"][item_id]["properties"]["answer"]["enum"]
+
+    assert enum("review.finding") == [MET, NOT_MET]
+    assert enum("review.question") == [MET, NOT_MET, NOT_APPLICABLE]
 
 
 def test_card_of_another_kind_is_refused():
