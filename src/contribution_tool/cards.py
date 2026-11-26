@@ -20,6 +20,7 @@ class CardItem:
     source: str
     tip: str
     industry: bool = False  # True when the item comes from industry practice, not EventHub
+    not_applicable: bool = False  # True when the question allows "not applicable"
 
 
 @dataclass(frozen=True)
@@ -54,11 +55,12 @@ def load_card(path: str | Path) -> Card:
         seen.add(item["id"])
         items.append(
             CardItem(
-                id=item["id"],
+                id=item["id"].strip(),
                 question=item["question"].strip(),
                 source=item["source"].strip(),
                 tip=item["tip"].strip(),
                 industry=bool(item.get("industry", False)),
+                not_applicable=bool(item.get("not_applicable", False)),
             )
         )
     if not items:
