@@ -126,3 +126,4 @@ tarafından koşturulur. Kabul testi gerçek öğrenci verisi gerektirdiği içi
 | REQ-7.2 | Denklik sınıfı | `tests/test_cards.py` |
 | REQ-7.3 | Denklik sınıfı, sınır değer | `tests/test_review_assess.py`, `tests/test_review_llm.py` |
 | REQ-7.4 | Hata tahmini | `tests/test_review_assess.py` |
+| REQ-7.5 | Durum geçişi, hata tahmini | `tests/test_review_cache.py` |
