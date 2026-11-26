@@ -147,6 +147,42 @@ yapar. Kullanıcı adı `CONTRIBUTION_TOOL_TAIGA_USERNAME` ortam değişkeninden
 Şifre `CONTRIBUTION_TOOL_TAIGA_PASSWORD` değişkeninden okunur; yoksa ekranda gösterilmeden
 sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 
+## 7. Nitel değerlendirme (v2)
+
+**REQ-7.1** Araç her katkının türünü, yazarını, tarihini, metnini ve bağlantısını saklar:
+PR açıklaması, kod incelemesi, Discussions yazısı, Taiga hikâyesi, hata kaydı ve Taiga
+yorumu.
+
+**REQ-7.2** Her katkı türü için repoda bir beklenti kartı bulunur. Karttaki her maddenin
+bir kimliği, evet/hayır ile cevaplanabilen bir sorusu, kaynağı (eventhub kuralı veya
+sektör uygulaması) ve bir önerisi vardır.
+
+**REQ-7.3** Her katkı, türünün kartındaki her madde için yerel bir dil modeliyle
+değerlendirilir: karşılandı, karşılanmadı veya uygulanamaz. Hiçbir öğrenci metni
+bilgisayarın dışına gönderilmez.
+
+**REQ-7.4** Model, öğrenci metnindeki talimatları uygulamaz. Değerlendirmeyi
+yönlendirmeye çalışan bir ifade içeren katkı raporda işaretlenir.
+
+**REQ-7.5** Her değerlendirme; katkının içeriği, kartın sürümü ve modelin adıyla
+birlikte saklanır. Bunlardan hiçbiri değişmediyse katkı yeniden değerlendirilmez.
+
+**REQ-7.6** Her öğrenci için, her kart maddesinin karşılanma oranı hesaplanır ve oranı
+en düşük maddeler raporlanır (farklar).
+
+**REQ-7.7** Aynı maddelerin rol dönemleri arasındaki karşılanma oranları karşılaştırılır
+(ilerleme).
+
+**REQ-7.8** Karşılanmayan maddeler için karttaki öneriler raporlanır. Öneriler modelden
+üretilmez.
+
+**REQ-7.9** Her öğrenci için yalnızca kendi verisini içeren ayrı bir Markdown raporu
+`data/reports/` altında üretilir.
+
+**REQ-7.10** Öğretim üyesinin elle değerlendirdiği örneklerle modelin uyuşma oranı
+hesaplanır ve gösterilir. Uyuşma oranı belirlenen eşiğin altındaysa raporlar
+üretilmez.
+
 ## Kapsam dışı (v1)
 
 - **Ağırlıkların Excel'de değiştirilmesi** (eski REQ-3.1). Excel formülleri karmaşık ve
@@ -155,8 +191,5 @@ sorulur. Şifre ve erişim anahtarı hiçbir dosyaya yazılmaz.
 - **Her sayının kaynağına bağlantı** (eski REQ-5.2). Her PR ve Taiga kaydının ayrıca
   saklanmasını gerektiriyor. Kontrol için uyarılar, hesap listeleri ve GitHub ile
   Taiga'nın kendi arayüzleri yeterli.
-- **Yerel dil modeliyle nitel değerlendirme** (v2'de ele alınabilir).
+
 - **Web arayüzü.**
-
-
-
