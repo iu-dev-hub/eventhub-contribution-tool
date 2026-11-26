@@ -19,7 +19,7 @@ from contribution_tool.review.agreement import (
     save_results,
 )
 from contribution_tool.review.assess import MET, NOT_MET
-from contribution_tool.review.cache import Cache
+from contribution_tool.review.cache import Cache, assess_cached
 from contribution_tool.review.calibration import write_label_sheet
 
 CARDS = {
@@ -78,7 +78,12 @@ LABELS = {
 
 def run(ask, labels=LABELS):
     evidence = [contribution(1), contribution(2)]
-    return measure("m", evidence, labels, CARDS, ask, Cache("cache"))
+    cache = Cache("cache")
+
+    def judge(item, card):
+        return assess_cached(item, card, ask, "m", cache)
+
+    return measure("m", evidence, labels, CARDS, judge)
 
 
 # Counting agreement
@@ -155,6 +160,7 @@ def test_results_and_disagreements_are_saved():
         "agreed": 2,
         "compared": 3,
         "failed": 0,
+        "uncertain": 0,
         "rate": 0.6667,
         "passed": False,
     }

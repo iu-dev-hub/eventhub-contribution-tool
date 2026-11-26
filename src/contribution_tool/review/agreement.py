@@ -15,8 +15,8 @@ from pathlib import Path
 
 from contribution_tool.cards import Card
 from contribution_tool.evidence import Evidence
-from contribution_tool.review.assess import Ask, ModelResponseError
-from contribution_tool.review.cache import Cache, assess_cached
+from contribution_tool.review.assess import ModelResponseError
+from contribution_tool.review.vote import UNCERTAIN, Judge
 
 DEFAULT_THRESHOLD = 0.80
 CANDIDATES = ("gemma4:latest", "qwen3.5:4b", "qwen3.5:latest", "ministral-3:latest")
@@ -32,7 +32,7 @@ class Disagreement:
     evidence_id: str
     item: str
     label: str
-    answer: str  # "error" when the model gave no usable answer
+    answer: str  # "error" when no usable answer, "uncertain" when a vote had no majority
     note: str
 
 
@@ -42,6 +42,7 @@ class Agreement:
     compared: int = 0
     agreed: int = 0
     failed: int = 0  # contributions the model could not answer
+    uncertain: int = 0  # labels where the models of a vote did not agree
     by_item: dict[str, list[int]] = field(default_factory=dict)  # item -> [agreed, compared]
     disagreements: list[Disagreement] = field(default_factory=list)
 
@@ -81,19 +82,18 @@ def evidence_from_sheet(path: str | Path) -> list[Evidence]:
 
 
 def measure(
-    model: str,
+    name: str,
     evidence: Iterable[Evidence],
     labels: Labels,
     cards: Mapping[str, Card],
-    ask: Ask,
-    cache: Cache,
+    judge: Judge,
 ) -> Agreement:
-    """Compare the model's answers with every label; unlabelled items are not counted.
+    """Compare the answers of one model (or one vote) with every label.
 
-    A contribution the model cannot answer counts as a disagreement for all its labels:
-    a model that often fails is not a good choice.
+    Unlabelled items are not counted. A contribution that gets no usable answer, and an
+    uncertain vote, count as disagreements: a method that often fails is not a good choice.
     """
-    result = Agreement(model)
+    result = Agreement(name)
     for item in evidence:
         card = cards[item.kind]
         wanted = [
@@ -104,34 +104,40 @@ def measure(
         if not wanted:
             continue
         try:
-            answers = {r.item_id: r for r in assess_cached(item, card, ask, model, cache).results}
+            answers = {r.item_id: r for r in judge(item, card).results}
         except ModelResponseError as error:
             result.failed += 1
             for item_id, label in wanted:
                 result.count(item_id, False)
                 result.disagreements.append(
-                    Disagreement(model, item.item_id, item_id, label, "error", str(error))
+                    Disagreement(name, item.item_id, item_id, label, "error", str(error))
                 )
             continue
         for item_id, label in wanted:
             answer = answers[item_id]
             agreed = answer.answer == label
             result.count(item_id, agreed)
+            result.uncertain += answer.answer == UNCERTAIN
             if not agreed:
                 result.disagreements.append(
-                    Disagreement(model, item.item_id, item_id, label, answer.answer, answer.note)
+                    Disagreement(name, item.item_id, item_id, label, answer.answer, answer.note)
                 )
     return result
 
 
 def format_agreement(results: Iterable[Agreement], threshold: float = DEFAULT_THRESHOLD) -> str:
-    """A table for the terminal: models from best to worst, then their weakest items."""
+    """A table for the terminal: best first, then the weakest items of each."""
     results = sorted(results, key=lambda r: r.rate, reverse=True)
-    lines = [f"{'Model':<22} {'Agreed':>9} {'Rate':>6} {'Failed':>6}  Passed (≥ {threshold:.0%})"]
+    width = max([len("Model")] + [len(r.model) for r in results])
+    lines = [
+        f"{'Model':<{width}} {'Agreed':>9} {'Rate':>5} {'Failed':>6} {'Unsure':>6}"
+        f"  Passed (≥ {threshold:.0%})"
+    ]
     for r in results:
         passed = "yes" if r.passed(threshold) else "no"
         lines.append(
-            f"{r.model:<22} {r.agreed:>4}/{r.compared:<4} {r.rate:>6.0%} {r.failed:>6}  {passed}"
+            f"{r.model:<{width}} {r.agreed:>4}/{r.compared:<4} {r.rate:>5.0%} {r.failed:>6}"
+            f" {r.uncertain:>6}  {passed}"
         )
     for r in results:
         weak = sorted(
@@ -160,6 +166,7 @@ def save_results(
                 "agreed": r.agreed,
                 "compared": r.compared,
                 "failed": r.failed,
+                "uncertain": r.uncertain,
                 "rate": round(r.rate, 4),
                 "passed": r.passed(threshold),
             }
