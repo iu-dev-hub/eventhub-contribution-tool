@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import csv
 import json
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -181,3 +181,26 @@ def save_results(
             for d in r.disagreements:
                 writer.writerow((d.model, d.evidence_id, d.item, d.label, d.answer, d.note))
     return path
+
+
+def calibrated(models: Sequence[str], path: str | Path = DEFAULT_RESULTS) -> tuple[str, float]:
+    """The method's name and agreement rate, if it passed calibration (REQ-7.10).
+
+    One model: that model must have passed. Several models: their vote must have passed.
+    """
+    try:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        raise ValueError(
+            f"No calibration results in {path}: run 'contribution-review calibrate --vote' first"
+        ) from None
+    entries = data.get("models", {})
+    for name, entry in entries.items():
+        voters = name.removeprefix("vote:").split("+") if name.startswith("vote:") else [name]
+        if set(voters) == set(models) and len(voters) == len(models) and entry.get("passed"):
+            return name, float(entry["rate"])
+    method = models[0] if len(models) == 1 else "the vote of " + ", ".join(models)
+    raise ValueError(
+        f"{method} has not passed calibration (threshold {data.get('threshold')}), "
+        "so no reports are made (REQ-7.10)"
+    )
